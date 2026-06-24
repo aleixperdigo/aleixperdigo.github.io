@@ -3,3 +3,7 @@
 assets/Captura*
 assets/cap_*.png
 kling_seamless_8fps.gif
+
+# heavy / temp PDFs (keep only Aleix_Perdigo_Portfolio_2026.pdf)
+tmp_*.pdf
+Aleix_Perdigo_Portfolio_2026_1pag.pdf
