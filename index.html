@@ -35,10 +35,12 @@ nav{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:3px s
 .nav-in .links{display:flex;gap:16px;flex-wrap:wrap}
 .nav-in .links a{font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;text-decoration:none}
 .nav-in .links a:hover{color:var(--blue)}
-.lang{margin-left:auto;display:flex;border:3px solid var(--ink);border-radius:999px;overflow:hidden}
+.nav-ctl{margin-left:auto;display:flex;align-items:center;gap:10px;flex:none}
+.nav-in .links{flex:1;min-width:0}
+.lang{display:flex;border:3px solid var(--ink);border-radius:999px;overflow:hidden}
 .lang button{font:700 12px var(--mono);border:0;background:transparent;padding:6px 12px;cursor:pointer;color:var(--ink)}
 .lang button.on{background:var(--blue);color:var(--paper)}
-.alt-ver{width:36px;height:36px;display:flex;align-items:center;justify-content:center;text-decoration:none;font:400 40px/1 var(--display);padding-top:14px;color:var(--ink);transition:.2s}
+.alt-ver{width:34px;height:34px;display:flex;align-items:center;justify-content:center;text-decoration:none;font:500 34px/1 "Inter",system-ui,-apple-system,"Helvetica Neue",sans-serif;padding-top:10px;color:var(--ink);transition:.2s}
 .alt-ver:hover{color:var(--blue);rotate:90deg}
 
 /* ---------- HERO ---------- */
@@ -267,8 +269,8 @@ footer h2{transform-origin:10% 60%}
 <nav><div class="nav-in">
   <a class="logo" href="#top">ALEIX<span>//</span>PERDIGÓ</a>
   <div class="links"><a href="#proyectos"><span class="es">Proyectos</span><span class="en">Projects</span></a><a href="#lab">Demo Lab</a><a href="#goroka">Goroka</a><a href="#vibe">Vibe Coding</a><a href="#charlas"><span class="es">Charlas</span><span class="en">Talks</span></a><a href="#docencia"><span class="es">Docencia</span><span class="en">Teaching</span></a><a href="#competencias"><span class="es">Competencias</span><span class="en">Skills</span></a><a href="#otros"><span class="es">Otros</span><span class="en">More</span></a><a href="#trayectoria"><span class="es">Trayectoria</span><span class="en">Career</span></a><a href="#awards"><span class="es">Premios</span><span class="en">Awards</span></a><a href="#contacto"><span class="es">Contacto</span><span class="en">Contact</span></a></div>
-  <div class="lang"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
-  <a class="alt-ver" href="classic.html" title="Versión clásica / Classic version" aria-label="Ir a la versión clásica">*</a>
+  <div class="nav-ctl"><div class="lang"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
+  <a class="alt-ver" href="classic.html" title="Versión clásica / Classic version" aria-label="Ir a la versión clásica">*</a></div>
 </div></nav>
 
 <header class="hero wrap" id="top">
