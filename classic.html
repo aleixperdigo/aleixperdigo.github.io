@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aleix Perdigó · AI Artist & Content Director</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THEME TOKENS · two skins driven by [data-theme]
+   brutal   = Neo-Brutalist (paper, hard shadows, accent blocks)
+   editorial= Dark editorial deck (near-black, serif, hairlines)
+   ============================================================ */
+:root{
+  --teal:#00C2CB; --magenta:#FF0DFF; --yellow:#FFE600;
+}
+
+/* ---- BRUTAL (default) ---- */
+body[data-theme="brutal"]{
+  --bg:#F5F0DC; --surface:#FFFFFF; --text:#111111; --muted:#555;
+  --a1:#00C2CB; --a2:#FF0DFF; --a3:#FFE600; --warn:#FF0DFF;
+  --line:#000000;
+  --display-font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --body-font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --mono:'Helvetica Neue',monospace;
+  --d-style:normal; --d-transform:uppercase; --d-weight:800; --d-spacing:-1.5px;
+  --card-bg:#FFFFFF; --card-bw:4px; --card-radius:6px;
+  --card-shadow:6px 6px 0 #000; --card-shadow-lg:12px 12px 0 #000;
+  --pill-bg:#FFFFFF; --pill-on:#00C2CB;
+}
+/* ---- EDITORIAL ---- */
+body[data-theme="editorial"]{
+  --bg:#0F0F14; --surface:#16161D; --text:#F5F1E8; --muted:#7A7A82;
+  --a1:#9B7BFF; --a2:#73DECC; --a3:#FF9E64; --warn:#FF6B6B;
+  --line:#2A2A33;
+  --display-font:'Instrument Serif',Georgia,serif;
+  --body-font:'Inter',-apple-system,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --d-style:italic; --d-transform:none; --d-weight:400; --d-spacing:-.02em;
+  --card-bg:#16161D; --card-bw:1px; --card-radius:16px;
+  --card-shadow:none; --card-shadow-lg:0 18px 60px rgba(0,0,0,.5);
+  --pill-bg:#16161D; --pill-on:#9B7BFF;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:var(--body-font); line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  transition:background .35s ease,color .35s ease;
+}
+a{color:inherit}
+::selection{background:var(--a2);color:#fff}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* i18n: show one language at a time */
+.en{display:none}
+body[data-lang="en"] .es{display:none}
+body[data-lang="en"] .en{display:revert}
+
+/* ============ FLOATING CONTROL DOCK (always visible) ============ */
+.dock{
+  position:fixed; top:14px; right:16px; z-index:200;
+  display:flex; gap:10px; align-items:center;
+}
+.toggle{
+  display:flex; align-items:center; gap:2px;
+  background:var(--pill-bg); border:2px solid var(--line);
+  border-radius:999px; padding:3px; box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+body[data-theme="brutal"] .toggle{border-radius:6px;border-width:3px;box-shadow:4px 4px 0 #000}
+.toggle button{
+  font-family:var(--body-font); cursor:pointer; border:none; background:transparent;
+  color:var(--muted); font-weight:700; font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; padding:7px 11px; border-radius:999px; transition:.15s;
+}
+body[data-theme="brutal"] .toggle button{border-radius:4px}
+.toggle button.on{background:var(--pill-on); color:#0a0a0a}
+.toggle button:not(.on):hover{color:var(--text)}
+.alt-ver{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:26px;font-weight:700;line-height:1;padding-top:6px;background:var(--pill-bg);border:2px solid var(--line);color:var(--a1);box-shadow:0 4px 14px rgba(0,0,0,.18);transition:.15s}
+.alt-ver:hover{background:var(--a1);color:#0a0a0a;transform:rotate(90deg)}
+.toggle .lbl{font-size:9px;color:var(--muted);padding:0 6px 0 8px;letter-spacing:.12em;font-weight:600}
+
+/* ============ NAV ============ */
+nav{
+  position:sticky; top:0; z-index:50;
+  background:var(--bg); border-bottom:2px solid var(--line);
+  backdrop-filter:saturate(1.2);
+}
+body[data-theme="editorial"] nav{background:rgba(15,15,20,.82);backdrop-filter:blur(10px)}
+body[data-theme="brutal"] nav{background:#000;border-bottom-width:4px}
+.nav-inner{display:flex;align-items:center;gap:16px;padding:12px 24px;max-width:1180px;margin:0 auto;flex-wrap:wrap}
+body[data-theme="brutal"] .nav-inner{color:#fff}
+.nav-logo{font-weight:800;letter-spacing:-.3px;font-size:17px;text-transform:uppercase;font-family:var(--body-font)}
+.nav-logo span{color:var(--a1)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap}
+.nav-links a{
+  text-decoration:none;font-size:12px;font-weight:600;text-transform:uppercase;
+  padding:6px 9px;border-radius:6px;letter-spacing:.04em;color:inherit;opacity:.85;
+}
+.nav-links a:hover{opacity:1;background:var(--a1);color:#0a0a0a}
+
+/* ============ TYPOGRAPHY HELPERS ============ */
+.display{font-family:var(--display-font);font-style:var(--d-style);text-transform:var(--d-transform);font-weight:var(--d-weight);letter-spacing:var(--d-spacing);line-height:.95}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--a1);font-weight:600}
+
+/* ============ HERO ============ */
+header.hero{padding:64px 0 38px}
+.badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.badge{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  padding:7px 13px;border:2px solid var(--line);border-radius:999px;background:var(--surface);
+}
+body[data-theme="brutal"] .badge{border-width:4px;border-radius:4px;box-shadow:6px 6px 0 #000}
+body[data-theme="brutal"] .badge.teal{background:var(--teal)}
+body[data-theme="brutal"] .badge.mag{background:var(--magenta);color:#fff}
+body[data-theme="brutal"] .badge.yel{background:var(--yellow)}
+body[data-theme="brutal"] .badge.blk{background:#000;color:#fff}
+body[data-theme="editorial"] .badge{background:transparent}
+body[data-theme="editorial"] .badge.teal{color:var(--a2);border-color:var(--a2)}
+body[data-theme="editorial"] .badge.mag{color:var(--a1);border-color:var(--a1)}
+body[data-theme="editorial"] .badge.yel{color:var(--a3);border-color:var(--a3)}
+
+.hero-grid{display:grid;grid-template-columns:1fr 360px;gap:46px;align-items:center}
+h1.giant{font-size:clamp(52px,10vw,128px)}
+body[data-theme="brutal"] h1.giant{letter-spacing:-3px;line-height:.9}
+body[data-theme="editorial"] h1.giant{font-size:clamp(60px,12vw,150px);line-height:.86}
+h1.giant em{font-style:inherit}
+body[data-theme="brutal"] h1.giant em{color:var(--magenta);-webkit-text-stroke:2px #000}
+body[data-theme="editorial"] h1.giant em{color:var(--a1)}
+.hero-sub{margin-top:22px;font-size:clamp(18px,2.4vw,27px);font-weight:600;max-width:640px;line-height:1.25}
+body[data-theme="brutal"] .hero-sub{text-transform:uppercase;letter-spacing:-.3px}
+body[data-theme="brutal"] .hero-sub .hl{background:var(--yellow);padding:0 6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+body[data-theme="editorial"] .hero-sub .hl{color:var(--a2);font-style:italic;font-family:var(--display-font);font-size:1.15em}
+.hero-desc{margin-top:18px;font-size:16px;max-width:560px;color:var(--muted)}
+body[data-theme="brutal"] .hero-desc{color:#333;font-weight:500}
+
+.portrait{
+  border:2px solid var(--line);border-radius:var(--card-radius);background:var(--a1);
+  aspect-ratio:3/3.5;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;position:relative;
+}
+body[data-theme="brutal"] .portrait{border-width:4px;box-shadow:var(--card-shadow-lg)}
+body[data-theme="editorial"] .portrait{background:linear-gradient(160deg,#1d1b2e,#16161d);box-shadow:var(--card-shadow-lg)}
+.portrait img{width:100%;height:100%;object-fit:cover}
+.portrait .ph{font-weight:700;text-transform:uppercase;font-size:12px;text-align:center;padding:18px;color:#0a0a0a;font-family:var(--body-font)}
+body[data-theme="editorial"] .portrait .ph{color:var(--muted)}
+.portrait .tag{position:absolute;top:12px;left:12px;background:#000;color:#fff;font-size:10px;font-weight:700;padding:5px 9px;border-radius:4px;text-transform:uppercase;letter-spacing:.1em;font-family:var(--mono)}
+
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;
+  font-family:var(--body-font);font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.04em;
+  padding:13px 19px;border:2px solid var(--line);border-radius:999px;background:var(--surface);transition:.12s;
+}
+body[data-theme="brutal"] .btn{border-radius:6px;border-width:4px;box-shadow:var(--card-shadow)}
+body[data-theme="brutal"] .btn:hover{transform:translate(-2px,-2px);box-shadow:var(--card-shadow-lg)}
+body[data-theme="brutal"] .btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 #000}
+body[data-theme="brutal"] .btn.primary{background:var(--teal)}
+body[data-theme="brutal"] .btn.mag{background:var(--magenta);color:#fff}
+body[data-theme="editorial"] .btn.primary{background:var(--a1);color:#0a0a0a;border-color:var(--a1)}
+body[data-theme="editorial"] .btn.mag{background:transparent;color:var(--a2);border-color:var(--a2)}
+body[data-theme="editorial"] .btn:hover{border-color:var(--a1);color:var(--a1)}
+body[data-theme="editorial"] .btn.primary:hover{color:#0a0a0a;filter:brightness(1.08)}
+
+/* ============ SECTION SHELL ============ */
+section{padding:120px 0 96px;border-top:2px solid var(--line)}
+section.wrap{padding-top:120px;padding-bottom:96px}
+body[data-theme="brutal"] section{border-top-width:4px}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:56px;flex-wrap:wrap}
+.sec-num{font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.1em;color:var(--a1)}
+body[data-theme="brutal"] .sec-num{background:#000;color:#fff;padding:6px 10px;border-radius:4px}
+h2.sec-title{font-size:clamp(42px,7vw,76px)}
+.sec-tag{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-left:auto}
+
+/* ============ FEATURE (PÁGINA 2) ============ */
+.feature{border:2px solid var(--line);border-radius:var(--card-radius);overflow:hidden;background:var(--surface)}
+body[data-theme="brutal"] .feature{border-width:4px;background:#000;color:#fff;box-shadow:var(--card-shadow-lg)}
+body[data-theme="editorial"] .feature{box-shadow:var(--card-shadow-lg)}
+.feature-top{display:grid;grid-template-columns:1.45fr 1fr}
+.feature-l{padding:48px}
+.feature-r{padding:48px;border-left:2px solid var(--line)}
+body[data-theme="brutal"] .feature-r{background:var(--magenta);color:#000;border-left:4px solid #000}
+body[data-theme="editorial"] .feature-r{background:#13131a}
+.feature h3{font-size:clamp(34px,5vw,64px);margin:12px 0 6px}
+.feature .role{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--a2)}
+.feature p{font-size:15px;margin-top:16px;max-width:520px;color:var(--muted)}
+body[data-theme="brutal"] .feature p{color:#ddd}
+.live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--a2);margin-right:8px;animation:blink 1.1s infinite}
+@keyframes blink{50%{opacity:.25}}
+.sched{list-style:none;display:flex;flex-direction:column;gap:15px}
+.sched li{display:flex;flex-direction:column;border-bottom:1px solid var(--line);padding-bottom:13px}
+body[data-theme="brutal"] .sched li{border-bottom:2px solid #000}
+.sched b{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;opacity:.7}
+.sched span{font-size:24px;font-weight:700;margin-top:3px}
+body[data-theme="editorial"] .sched span{font-family:var(--display-font);font-style:italic;font-weight:400;font-size:30px}
+
+/* ============ CARD GRID ============ */
+.grid{display:grid;gap:32px}
+.grid.two{grid-template-columns:1fr 1fr}
+.grid.three{grid-template-columns:repeat(3,1fr)}
+.card{
+  border:2px solid var(--line);border-radius:var(--card-radius);background:var(--card-bg);
+  padding:32px;display:flex;flex-direction:column;transition:.14s;overflow:hidden;
+}
+.card-media{margin:-32px -32px 24px;aspect-ratio:16/9;overflow:hidden;background:#0c0c11;border-bottom:2px solid var(--line)}
+body[data-theme="brutal"] .card-media{border-bottom-width:4px}
+.card-media img,.card-media video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+.card:hover .card-media img{transform:scale(1.04)}
+/* Goroka cards: más achatadas (imagen recortada + tipografía compacta) */
+.goroka-section .card{padding:28px}
+.goroka-section .card-media{aspect-ratio:2.2/1;margin:-28px -28px 20px}
+body[data-theme="editorial"] .goroka-section .card h3{font-size:23px;line-height:1.02}
+.goroka-section .card .role{font-size:12px;margin-top:3px}
+.goroka-section .card .chip{margin-bottom:12px}
+.goroka-section .card p{font-size:14px;margin-top:12px;line-height:1.55}
+.goroka-section .card .stats{margin-top:13px}
+.goroka-section .card .stat b{font-size:23px}
+.goroka-section .card .meta{margin-top:8px}
+.goroka-section .card .cardlink{margin-top:14px}
+body[data-theme="brutal"] .card{border-width:4px;box-shadow:var(--card-shadow)}
+body[data-theme="brutal"] .card:hover{transform:translate(-3px,-3px);box-shadow:var(--card-shadow-lg)}
+body[data-theme="editorial"] .card:hover{border-color:var(--a1);transform:translateY(-3px)}
+.card .chip{align-self:flex-start;font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:5px 10px;border:1px solid var(--line);border-radius:999px;margin-bottom:16px;color:var(--muted)}
+body[data-theme="brutal"] .card .chip{border-width:2px;border-radius:3px;color:#000}
+body[data-theme="brutal"] .chip.teal{background:var(--teal)}
+body[data-theme="brutal"] .chip.mag{background:var(--magenta);color:#fff}
+body[data-theme="brutal"] .chip.yel{background:var(--yellow)}
+body[data-theme="brutal"] .chip.blk{background:#000;color:#fff}
+body[data-theme="editorial"] .chip.teal{color:var(--a2);border-color:var(--a2)}
+body[data-theme="editorial"] .chip.mag{color:var(--a1);border-color:var(--a1)}
+body[data-theme="editorial"] .chip.yel{color:var(--a3);border-color:var(--a3)}
+.card h3{font-size:23px;line-height:1.05;font-family:var(--display-font);font-style:var(--d-style);text-transform:var(--d-transform);font-weight:var(--d-weight);letter-spacing:var(--d-spacing)}
+body[data-theme="editorial"] .card h3{font-size:30px}
+.card .role{font-size:13px;font-weight:600;color:var(--muted);margin-top:5px}
+.card p{font-size:15px;margin-top:14px;flex:1;color:var(--muted);line-height:1.6}
+body[data-theme="brutal"] .card p{color:#333}
+.card .meta{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-top:10px;color:var(--muted);opacity:.85}
+
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.stat{border:1px solid var(--line);border-radius:8px;padding:11px 14px;min-width:96px;background:transparent}
+body[data-theme="brutal"] .stat{border-width:3px;border-radius:5px;background:var(--bg)}
+.stat b{display:block;font-size:27px;font-weight:800;letter-spacing:-1px;line-height:1}
+body[data-theme="editorial"] .stat b{font-family:var(--display-font);font-style:italic;font-weight:400;color:var(--a2)}
+.stat span{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+body[data-theme="brutal"] .stat.teal{background:var(--teal);color:#000}
+body[data-theme="brutal"] .stat.yel{background:var(--yellow);color:#000}
+body[data-theme="brutal"] .stat.mag{background:var(--magenta);color:#fff}
+body[data-theme="brutal"] .stat.teal b,body[data-theme="brutal"] .stat.yel b,body[data-theme="brutal"] .stat.mag b{color:inherit}
+body[data-theme="brutal"] .stat.teal span,body[data-theme="brutal"] .stat.yel span,body[data-theme="brutal"] .stat.mag span{color:inherit}
+
+.cardlink{margin-top:18px;align-self:flex-start;font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.04em;text-decoration:none;padding-bottom:2px;border-bottom:2px solid var(--a2)}
+.cardlink::after{content:" ↗"}
+body[data-theme="brutal"] .cardlink{border-bottom:3px solid var(--magenta)}
+body[data-theme="brutal"] .cardlink:hover{background:var(--yellow)}
+body[data-theme="editorial"] .cardlink:hover{color:var(--a2)}
+.todo{outline:2px dashed var(--a2);outline-offset:3px;border-radius:3px}
+
+/* ============ MEDIA GALLERY ============ */
+.media-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.media{
+  border:2px solid var(--line);border-radius:var(--card-radius);overflow:hidden;
+  background:var(--card-bg);display:flex;flex-direction:column;transition:.14s;
+}
+body[data-theme="brutal"] .media{border-width:4px;box-shadow:var(--card-shadow)}
+body[data-theme="brutal"] .media:hover{transform:translate(-3px,-3px);box-shadow:var(--card-shadow-lg)}
+body[data-theme="editorial"] .media:hover{border-color:var(--a1)}
+.media.span2{grid-column:1/-1}
+.frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;display:block;overflow:hidden}
+.frame.vert{aspect-ratio:9/16;max-width:340px;margin:0 auto;width:100%;border-radius:var(--card-radius) var(--card-radius) 0 0}
+/* Shorts verticales: 5 por fila, centrados */
+.shorts-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:28px}
+.short{flex:0 0 calc((100% - 72px)/5);max-width:215px;display:flex;flex-direction:column}
+.short .sposter{position:relative;display:block;aspect-ratio:9/16;border:2px solid var(--line);border-radius:var(--card-radius);overflow:hidden;background:#0c0c11}
+body[data-theme="brutal"] .short .sposter{border-width:4px;box-shadow:var(--card-shadow)}
+.short .sposter img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.short:hover .sposter{border-color:var(--a1)}
+.short:hover .sposter img{transform:scale(1.05)}
+.short .sposter .play{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);color:#000;display:flex;align-items:center;justify-content:center;font-size:13px;z-index:2}
+.short .scap{margin-top:9px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center}
+.short .scap a{text-decoration:none}
+.short .scap a:hover{color:var(--a1)}
+@media(max-width:880px){.short{flex:0 0 calc((100% - 18px)/2)}}
+/* ============ COMPETENCIAS / SKILLS ============ */
+.skills{display:flex;flex-direction:column;gap:0;border:2px solid var(--line);border-radius:var(--card-radius);overflow:hidden;background:var(--card-bg)}
+body[data-theme="brutal"] .skills{border-width:4px;box-shadow:var(--card-shadow-lg)}
+.skill-row{display:grid;grid-template-columns:210px 1fr;gap:28px;align-items:center;padding:28px 32px}
+.skill-row+.skill-row{border-top:1px solid var(--line)}
+body[data-theme="brutal"] .skill-row+.skill-row{border-top:3px solid #000}
+.skill-cat{font-family:var(--display-font);font-style:var(--d-style);font-weight:var(--d-weight);text-transform:var(--d-transform);letter-spacing:var(--d-spacing);font-size:26px;line-height:1}
+body[data-theme="brutal"] .skill-cat{font-size:20px}
+.skill-cat.lila{color:var(--a1)}
+.skill-cat.teal{color:var(--a2)}
+.skill-pills{display:flex;flex-wrap:wrap;gap:9px}
+.pill{font-size:13px;font-weight:600;padding:8px 14px;border:1px solid var(--line);border-radius:999px;color:var(--text);background:transparent;transition:.14s}
+body[data-theme="brutal"] .pill{border-width:2px;border-radius:5px}
+.pill small{font-family:var(--mono);font-size:10px;color:var(--muted);font-weight:500;margin-left:5px}
+.skill-row.lila .pill:hover{border-color:var(--a1);color:var(--a1)}
+.skill-row.teal .pill:hover{border-color:var(--a2);color:var(--a2)}
+@media(max-width:880px){.skill-row{grid-template-columns:1fr;gap:12px}}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+/* clickable poster (for non-embeddable links) */
+a.poster{position:relative;aspect-ratio:16/9;display:flex;align-items:flex-end;text-decoration:none;overflow:hidden;background:linear-gradient(135deg,#1b1b24,#0f0f14)}
+a.poster.teal{background:linear-gradient(135deg,var(--a1),#0f0f14)}
+a.poster.mag{background:linear-gradient(135deg,var(--a2),#15131f)}
+a.poster.warm{background:linear-gradient(135deg,#ff9e64,#3a1f14)}
+body[data-theme="brutal"] a.poster.teal{background:var(--teal)}
+body[data-theme="brutal"] a.poster.mag{background:var(--magenta)}
+body[data-theme="brutal"] a.poster.warm{background:var(--yellow)}
+a.poster .pbig{font-family:var(--display-font);font-style:var(--d-style);font-weight:var(--d-weight);text-transform:var(--d-transform);font-size:clamp(28px,5vw,52px);line-height:.95;color:#fff;padding:26px;letter-spacing:var(--d-spacing)}
+body[data-theme="brutal"] a.poster .pbig{color:#000}
+a.poster .play{position:absolute;top:18px;right:18px;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.92);color:#000;display:flex;align-items:center;justify-content:center;font-size:18px}
+a.poster:hover .play{transform:scale(1.08)}
+.media-cap{padding:24px 26px;display:flex;flex-direction:column;gap:6px;flex:1}
+.media-cap h3{font-size:20px;font-family:var(--display-font);font-style:var(--d-style);text-transform:var(--d-transform);font-weight:var(--d-weight);letter-spacing:var(--d-spacing)}
+body[data-theme="editorial"] .media-cap h3{font-size:26px}
+.media-cap p{font-size:13px;color:var(--muted)}
+.media-cap .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.media-cap .src{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.mini{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:6px 11px;border:1px solid var(--line);border-radius:999px;color:var(--text)}
+body[data-theme="brutal"] .mini{border-width:2px;border-radius:4px}
+.mini:hover{border-color:var(--a1);color:var(--a1)}
+body[data-theme="brutal"] .mini:hover{background:var(--a3);color:#000;border-color:#000}
+/* poster background image (graceful fallback to gradient if missing) */
+a.poster .pimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+a.poster::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,0) 55%);z-index:1;pointer-events:none}
+a.poster .pbig{position:relative;z-index:2}
+a.poster .play{z-index:2}
+a.poster:hover .pimg{transform:scale(1.04);transition:transform .25s}
+
+/* ============ TALKS ============ */
+.talk{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;border:2px solid var(--line);border-radius:var(--card-radius);background:var(--card-bg);padding:18px 22px}
+body[data-theme="brutal"] .talk{border-width:4px;box-shadow:var(--card-shadow)}
+.talk+.talk{margin-top:16px}
+.talk .idx{font-family:var(--display-font);font-style:var(--d-style);font-weight:var(--d-weight);font-size:30px;letter-spacing:-1px;color:var(--a1)}
+body[data-theme="brutal"] .talk .idx{background:var(--yellow);color:#000;border:3px solid #000;border-radius:5px;padding:2px 12px}
+.talk h3{font-size:19px;font-family:var(--display-font);font-style:var(--d-style);text-transform:var(--d-transform);font-weight:var(--d-weight);letter-spacing:var(--d-spacing)}
+body[data-theme="editorial"] .talk h3{font-size:25px}
+.talk .where{font-size:13px;color:var(--muted)}
+.talk a.mini{white-space:nowrap}
+
+/* ============ EXPERIENCE ============ */
+.xp{border:2px solid var(--line);border-radius:var(--card-radius);overflow:hidden}
+body[data-theme="brutal"] .xp{border-width:4px;box-shadow:var(--card-shadow)}
+.xp-row{display:grid;grid-template-columns:230px 1fr 120px;gap:24px;padding:26px 30px;align-items:baseline;background:var(--card-bg)}
+.xp-row+.xp-row{border-top:1px solid var(--line)}
+body[data-theme="brutal"] .xp-row+.xp-row{border-top:3px solid #000}
+body[data-theme="brutal"] .xp-row:nth-child(even){background:var(--bg)}
+.xp-row h3{font-size:17px;font-family:var(--display-font);font-style:var(--d-style);text-transform:var(--d-transform);font-weight:var(--d-weight);letter-spacing:var(--d-spacing)}
+body[data-theme="editorial"] .xp-row h3{font-size:22px}
+.xp-row .co{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--a1);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.xp-row p{font-size:13px;color:var(--muted)}
+.xp-row .when{font-family:var(--mono);font-size:12px;text-align:right;letter-spacing:.04em;color:var(--muted)}
+
+.xp-row .logos{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.lgbox{display:inline-flex;align-items:center;background:#fff;border-radius:8px;padding:6px 10px}
+body[data-theme="brutal"] .lgbox{border:3px solid #000;border-radius:5px}
+.lg{height:22px;width:auto;max-width:130px;object-fit:contain;display:block}
+.lg.mono{filter:brightness(0)}
+.lg.mult{height:30px;filter:grayscale(1) contrast(1.6) brightness(.55)}
+.lg.inv{filter:invert(1)}
+
+/* ============ AWARDS ============ */
+.awards{display:flex;gap:12px;flex-wrap:wrap}
+.award{border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-weight:600;font-size:13px;background:var(--card-bg)}
+body[data-theme="brutal"] .award{border:3px solid #000;border-radius:5px;box-shadow:4px 4px 0 #000;text-transform:uppercase}
+body[data-theme="brutal"] .award.hl{background:var(--yellow)}
+body[data-theme="editorial"] .award.hl{border-color:var(--a2);color:var(--a2)}
+
+.rvop{border:2px solid var(--line);border-radius:var(--card-radius);background:var(--card-bg);padding:40px}
+body[data-theme="brutal"] .rvop{border-width:4px;box-shadow:var(--card-shadow-lg)}
+.rvop-t{font-size:clamp(34px,5vw,60px);line-height:.95;color:var(--a1)}
+.rvop-sub{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:12px}
+.rvop p{margin:18px 0 26px;max-width:620px;color:var(--muted)}
+a.award{text-decoration:none;color:var(--text);transition:.14s}
+a.award:hover{border-color:var(--a1);color:var(--a1)}
+body[data-theme="editorial"] a.award.hl:hover{color:#0a0a0a;background:var(--a2)}
+
+/* ============ FOOTER ============ */
+footer{border-top:2px solid var(--line);padding:64px 0 46px}
+body[data-theme="brutal"] footer{background:#000;color:#fff;border-top-width:4px}
+body[data-theme="editorial"] footer{background:#0b0b0f}
+footer h2{font-size:clamp(38px,8vw,92px);line-height:.9}
+footer h2 em{font-style:inherit;color:var(--a2)}
+.foot-links{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.foot-links a{text-decoration:none;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.04em;padding:13px 19px;border:2px solid currentColor;border-radius:999px;opacity:.9}
+body[data-theme="brutal"] .foot-links a{border:4px solid #fff;border-radius:6px}
+.foot-links a:hover{background:var(--a1);color:#0a0a0a;border-color:var(--a1)}
+.foot-meta{margin-top:36px;font-family:var(--mono);font-size:11px;opacity:.55;text-transform:uppercase;letter-spacing:.1em}
+
+/* ============ GOROKA SECTION (subtle lila bg, full-width) ============ */
+section.goroka-section{padding:76px 0 54px}
+body[data-theme="brutal"] section.goroka-section{background:#E1D4F0}
+body[data-theme="editorial"] section.goroka-section{background:#181122}
+.coming-badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;border:2px solid var(--a2);color:var(--a2);border-radius:4px;margin-top:8px}
+body[data-theme="brutal"] .coming-badge{background:var(--magenta);color:#fff;border-color:#000;border-width:3px}
+
+
+/* ============ FRESH DEMO LAB ============ */
+.lab{display:grid;grid-template-columns:1fr 1.25fr;gap:56px;align-items:center}
+.lab-intro h3{font-family:var(--display-font);font-style:var(--d-style);font-weight:var(--d-weight);text-transform:var(--d-transform);letter-spacing:var(--d-spacing);font-size:clamp(28px,3.4vw,40px);line-height:1.05}
+.lab-intro p{font-size:16px;line-height:1.65;color:var(--muted);margin-top:18px;max-width:460px}
+.lab-steps{list-style:none;margin-top:30px;display:flex;flex-direction:column;gap:14px;counter-reset:st}
+.lab-steps li{counter-increment:st;display:grid;grid-template-columns:34px 1fr;gap:12px;font-size:14px;line-height:1.5;color:var(--muted)}
+.lab-steps li::before{content:"0" counter(st);font-family:var(--mono);font-size:11px;color:var(--a1);padding-top:3px}
+.lab-steps b{color:var(--text)}
+.lab-vids{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.lab-vids .short{max-width:none}
+.lab-vids .sposter{aspect-ratio:3/4}
+.lab-vids .scap{text-align:left;margin-top:14px;font-size:11px}
+.lab-vids .scap strong{display:block;font-family:var(--body-font);text-transform:none;letter-spacing:0;font-size:15px;color:var(--text);margin-bottom:4px}
+@media(max-width:880px){.lab{grid-template-columns:1fr;gap:36px}}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:880px){
+  section,section.wrap{padding-top:80px;padding-bottom:64px}
+  .sec-head{margin-bottom:36px}
+  .dock{top:auto;bottom:14px;right:50%;transform:translateX(50%)}
+  .hero-grid{grid-template-columns:1fr}
+  .portrait{max-width:280px}
+  .feature-top{grid-template-columns:1fr}
+  .feature-r{border-left:none;border-top:2px solid var(--line)}
+  body[data-theme="brutal"] .feature-r{border-top:4px solid #000}
+  .grid.two,.grid.three,.media-grid{grid-template-columns:1fr}
+  .xp-row{grid-template-columns:1fr;gap:6px}
+  .xp-row .when{text-align:left}
+  .talk{grid-template-columns:auto 1fr;gap:12px}
+  .talk a.mini{grid-column:1/-1}
+}
+</style>
+</head>
+<body data-theme="editorial" data-lang="es">
+
+<!-- FLOATING CONTROLS (always visible) -->
+<div class="dock">
+  <div class="toggle" id="langToggle">
+    <span class="lbl">LANG</span>
+    <button data-lang-set="es" class="on">ES</button>
+    <button data-lang-set="en">EN</button>
+  </div>
+  <a class="alt-ver" href="./" title="Versión principal / Main version" aria-label="Ir a la versión principal">*</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">ALEIX<span>//</span>PERDIGÓ</div>
+    <div class="nav-links">
+      <a href="#proyectos"><span class="es">Proyectos</span><span class="en">Projects</span></a>
+      <a href="#lab">Demo Lab</a>
+      <a href="#goroka">Goroka</a>
+      <a href="#vibe">Vibe Coding</a>
+      <a href="#docencia"><span class="es">Docencia</span><span class="en">Teaching</span></a>
+      <a href="#charlas"><span class="es">Charlas</span><span class="en">Talks</span></a>
+      <a href="#competencias"><span class="es">Competencias</span><span class="en">Skills</span></a>
+      <a href="#otros"><span class="es">Otros</span><span class="en">More</span></a>
+      <a href="#trayectoria"><span class="es">Trayectoria</span><span class="en">Career</span></a>
+      <a href="#awards"><span class="es">Premios</span><span class="en">Awards</span></a>
+      <a href="#contacto"><span class="es">Contacto</span><span class="en">Contact</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero wrap">
+  <div class="badge-row">
+    <span class="badge teal">AI ARTIST</span>
+    <span class="badge mag">AI CONTENT DIRECTOR</span>
+    <span class="badge teal">BARCELONA · 2026</span>
+    <span class="badge blk"><span class="es">DISPONIBLE</span><span class="en">AVAILABLE</span></span>
+  </div>
+  <div class="hero-grid">
+    <div>
+      <h1 class="giant display">ALEIX<br><em>PERDIGÓ</em></h1>
+      <p class="hero-sub">
+        <span class="es">AI artist & content director en <a href="https://goroka.tv" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:3px">Goroka</a>. <span class="hl">Imagen + vídeo generativo</span> para TV, plataformas y educación.</span>
+        <span class="en">AI artist & content director at <a href="https://goroka.tv" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:3px">Goroka</a>. <span class="hl">Generative image + video</span> for TV, streaming and education.</span>
+      </p>
+      <p class="hero-desc">
+        <span class="es">15+ años entre estrategia digital y producción audiovisual. Hoy: IA generativa de extremo a extremo, del prompt al broadcast, para Televisión Española, TV3, Movistar Plus+ y aulas de toda Barcelona.</span>
+        <span class="en">15+ years across digital strategy and audiovisual production. Today: end-to-end generative AI, from prompt to broadcast, for Spanish public TV, TV3, Movistar Plus+ and classrooms across Barcelona.</span>
+      </p>
+      <div class="cta-row">
+        <a class="btn primary" href="#proyectos"><span class="es">Ver obra</span><span class="en">See work</span></a>
+        <a class="btn mag" href="#contacto"><span class="es">Trabajemos juntos</span><span class="en">Let's work</span></a>
+        <a class="btn" href="https://linkedin.com/in/aleixperdigo" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="portrait" id="portrait">
+      <span class="tag">AleixP</span>
+      <img src="assets/opt/photo.jpg" fetchpriority="high" alt="Aleix Perdigó">
+    </div>
+  </div>
+</header>
+
+<!-- 01 PROYECTOS Y REEL -->
+<section id="proyectos" class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title display"><span class="es">Proyectos y Reel</span><span class="en">Projects & Reel</span></h2>
+    <span class="sec-tag"><span class="es">Vídeo generativo</span><span class="en">Generative video</span></span>
+  </div>
+  <div class="media-grid">
+
+    <!-- SEEDANCE 2 SHORT · LUCY & RUSTY -->
+    <div class="media">
+      <a class="poster teal" href="https://youtu.be/md4nfi1uD1Y" target="_blank" rel="noopener">
+        <img loading="lazy" decoding="async" class="pimg" src="assets/opt/lucy-rusty-cover.jpg" alt="Lucy &amp; Rusty Jump &amp; Run 2026" onerror="this.remove()">
+        <span class="play">▶</span>
+      </a>
+      <div class="media-cap">
+        <h3>Seedance 2 Short: Lucy &amp; Rusty Jump &amp; Run 2026</h3>
+        <p><span class="es">Cortometraje generativo en Seedance 2, diseño de personajes, animación y mundo propio.</span><span class="en">Generative short film in Seedance 2, character design, animation and a world of its own.</span></p>
+        <div class="row"><span class="src">YouTube</span><a class="mini" href="https://youtu.be/md4nfi1uD1Y" target="_blank" rel="noopener">YouTube ↗</a></div>
+      </div>
+    </div>
+
+    <!-- ALEIXP AIREEL 2025 -->
+    <div class="media">
+      <a class="poster mag" href="https://www.youtube.com/watch?v=2WkOsM1DHt0" target="_blank" rel="noopener">
+        <img loading="lazy" decoding="async" class="pimg" src="assets/opt/reel-2025-cover.jpg" alt="AleixP · AIReel 2025" onerror="this.remove()">
+        <span class="play">▶</span>
+      </a>
+      <div class="media-cap">
+        <h3>AleixP · AIReel 2025</h3>
+        <p><span class="es">Showreel 2025: piezas de vídeo generativo de Aleix Perdigó: TV, plataformas y campañas.</span><span class="en">2025 showreel: generative video pieces by Aleix Perdigó: TV, streaming and campaigns.</span></p>
+        <div class="row"><span class="src">Reel · YouTube</span><a class="mini" href="https://www.youtube.com/watch?v=2WkOsM1DHt0" target="_blank" rel="noopener"><span class="es">Ver reel ↗</span><span class="en">Watch reel ↗</span></a></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 02 FRESH DEMO LAB -->
+<section id="lab" class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title display">Fresh Demo Lab</h2>
+    <span class="sec-tag"><span class="es">Experimentos recién salidos</span><span class="en">Fresh out of the lab</span></span>
+  </div>
+  <div class="lab">
+    <div class="lab-intro">
+      <h3><span class="es">Actuación en el salón, cámara en Blender, look con IA</span><span class="en">Acting in the living room, camera in Blender, look by AI</span></h3>
+      <p><span class="es">Grabo la actuación con el móvil en casa, haciendo de todos los personajes. El movimiento complejo deja de depender de la suerte del prompt porque va bloqueado en 3D.</span><span class="en">I shoot the performance on my phone at home, playing every character. Complex motion stops being a prompt lottery because it's locked in 3D.</span></p>
+      <ol class="lab-steps">
+        <li><span><b>SAM 3D Body · ComfyUI</b> <span class="es">saca el esqueleto 3D de cada toma, en local.</span><span class="en">pulls a 3D skeleton from each take, locally.</span></span></li>
+        <li><span><b>Blender</b> <span class="es">junta a los personajes y dirige la cámara a mano.</span><span class="en">puts the characters together and directs the camera by hand.</span></span></li>
+        <li><span><b>Seedance 2.5</b> <span class="es">usa ese render como referencia de vídeo y pone el look.</span><span class="en">uses that render as a video reference and adds the look.</span></span></li>
+      </ol>
+    </div>
+    <div class="lab-vids">
+      <div class="short">
+        <a class="sposter" href="https://youtube.com/shorts/WvGIO-yCi_A" target="_blank" rel="noopener">
+          <span class="play">▶</span>
+          <img src="assets/lab-campnou.jpg" alt="From my couch to Camp Nou" loading="lazy" onerror="this.remove()">
+        </a>
+        <div class="scap"><strong>From my couch to Camp Nou</strong><a href="https://youtube.com/shorts/WvGIO-yCi_A" target="_blank" rel="noopener">YouTube Shorts ↗</a></div>
+      </div>
+      <div class="short">
+        <a class="sposter" href="https://youtube.com/shorts/5nkz7LFe0Eo" target="_blank" rel="noopener">
+          <span class="play">▶</span>
+          <img src="assets/lab-planet.jpg" alt="My living room, but make it another planet" loading="lazy" onerror="this.remove()">
+        </a>
+        <div class="scap"><strong>My living room, but make it another planet</strong><a href="https://youtube.com/shorts/5nkz7LFe0Eo" target="_blank" rel="noopener">YouTube Shorts ↗</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 GOROKA -->
+<section id="goroka" class="goroka-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title display">Goroka · <span class="es">Producción TV & plataformas</span><span class="en">TV & streaming production</span></h2>
+      <span class="sec-tag">TVE · TV3 · Movistar+ · Antena 3</span>
+    </div>
+
+    <!-- PÁGINA 2 · CRIMS · LUZ · TIMADORES · 4 cards a 2 columnas -->
+    <div class="grid two">
+      <div class="card">
+        <div class="card-media"><video src="assets/opt/timadores.mp4" poster="assets/opt/timadores.jpg" autoplay muted loop playsinline aria-label="Timadores · Antena 3"></video></div>
+        <span class="chip blk">ANTENA 3</span>
+        <h3>Timadores</h3>
+        <div class="role"><span class="es">Producción · proyecto sin anunciar</span><span class="en">Production · unannounced</span></div>
+        <p>
+          <span class="es">La serie más ambiciosa en IA de Goroka: varios minutos de vídeo en pantalla generados con IA, entre escenas full frame, B-roll, efectos especiales y retoque de elementos de vídeo. Nuevo proyecto para <b style="color:var(--text)">Antena 3</b>, todavía sin anuncio público; más info próximamente.</span>
+          <span class="en">Goroka's most ambitious AI series: several minutes of on-screen AI-generated video, spanning full-frame scenes, B-roll, special effects and video element retouching. New project for <b style="color:var(--text)">Antena 3</b>, not yet publicly announced; more info soon.</span>
+        </p>
+        <span class="coming-badge">Coming soon</span>
+      </div>
+
+      <div class="card">
+        <div class="card-media"><img loading="lazy" decoding="async" src="assets/PaginaDos.jpg" alt="Página Dos, TVE La 2" onerror="this.parentNode.remove()"></div>
+        <span class="chip teal"><span class="live-dot"></span><span class="es">EN ANTENA · TVE · LA 2</span><span class="en">ON AIR · TVE · LA 2</span></span>
+        <h3>Página 2</h3>
+        <div class="role">AI Artist · <span class="es">pieza de IA generativa</span><span class="en">generative AI segment</span></div>
+        <p>
+          <span class="es">AI video artist del programa cultural <b style="color:var(--text)">Página 2</b> de TVE: las piezas audiovisuales generadas con IA que se emiten cada semana en el espacio de libros y cultura de La 2. Efectos especiales y videorrelatos de 2-3 minutos full frame con IA. Del concepto al render final dentro del flujo broadcast.</span>
+          <span class="en">AI video artist for TVE's culture show <b style="color:var(--text)">Página 2</b>: the AI-generated audiovisual segments aired every week on Spain's La 2 books-and-culture program. Special effects and 2-3 minute full-frame AI video stories. From concept to final render inside the broadcast pipeline.</span>
+        </p>
+        <div class="meta"><span class="es">La 2 · Sábados 12:00 · Semanal · AI Artist</span><span class="en">La 2 · Saturdays 12:00 · Weekly · AI Artist</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-media"><img loading="lazy" decoding="async" src="assets/Crims.webp" alt="Crims, TV3, de Carles Porta" onerror="this.parentNode.remove()"></div>
+        <span class="chip teal"><span class="es">TV3 · ÚLTIMA TEMPORADA</span><span class="en">TV3 · LATEST SEASON</span></span>
+        <h3>Crims</h3>
+        <div class="role"><span class="es">Producción · serie true crime de Carles Porta</span><span class="en">Production · Carles Porta's true-crime series</span></div>
+        <p>
+          <span class="es">Producción de la última temporada de <b style="color:var(--text)">Crims</b>, el fenómeno true crime de TV3 que lidera el prime time catalán sábado tras sábado. AI image &amp; video artist: escenas full frame, B-roll y efectos especiales.</span>
+          <span class="en">Production of the latest season of <b style="color:var(--text)">Crims</b>, TV3's true-crime phenomenon that leads Catalan prime time week after week. AI image &amp; video artist: full-frame scenes, B-roll and special effects.</span>
+        </p>
+        <div class="stats">
+          <div class="stat teal"><b>479K</b><span class="es">Espect. media T6</span><span class="en">Avg. viewers S6</span></div>
+          <div class="stat yel"><b>25,9%</b><span class="es">Cuota</span><span class="en">Share</span></div>
+        </div>
+        <div class="meta"><span class="es">Picos del 26,5% · media &gt;23%</span><span class="en">Peaks of 26.5% · avg &gt;23%</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-media"><img loading="lazy" decoding="async" src="assets/Luxenlaoscuridad.jpg" alt="Luz en la oscuridad, Movistar Plus+, de Carles Porta" onerror="this.parentNode.remove()"></div>
+        <span class="chip mag">MOVISTAR PLUS+ · ORIGINAL</span>
+        <h3><span class="es">Luz en la oscuridad</span><span class="en">Luz en la oscuridad</span></h3>
+        <div class="role"><span class="es">Producción · true crime premium de Carles Porta</span><span class="en">Production · Carles Porta's premium true crime</span></div>
+        <p>
+          <span class="es">Producción de <b style="color:var(--text)">Luz en la oscuridad</b>, la serie original de Movistar Plus+ que lleva el true crime al máximo nivel: parece una película, pero es real. AI image &amp; video artist: escenas full frame, B-roll y efectos especiales.</span>
+          <span class="en">Production of <b style="color:var(--text)">Luz en la oscuridad</b>, the Movistar Plus+ original taking true crime to the highest level: it looks like a film, but it's real. AI image &amp; video artist: full-frame scenes, B-roll and special effects.</span>
+        </p>
+        <div class="stats">
+          <div class="stat mag"><b>#1</b><span class="es">Original true crime</span><span class="en">True-crime original</span></div>
+          <div class="stat yel"><b>Premium</b><span class="es">Buque insignia</span><span class="en">Flagship</span></div>
+        </div>
+        <a class="cardlink" href="https://www.movistarplus.es/documentales/luz-en-la-oscuridad/ficha?tipo=E&id=3095257" target="_blank" rel="noopener"><span class="es">Ver en Movistar+</span><span class="en">View on Movistar+</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 VIBE CODING -->
+<section id="vibe" class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title display">Vibe Coding</h2>
+    <span class="sec-tag"><span class="es">Mini-apps & herramientas</span><span class="en">Mini-apps & tools</span></span>
+  </div>
+  <div class="media-grid">
+
+    <!-- AI VIDEO MATRIX -->
+    <div class="media">
+      <a class="poster mag" href="https://aleixperdigo.github.io/turbo2-price-matrix/" target="_blank" rel="noopener">
+        <img loading="lazy" decoding="async" class="pimg" src="assets/opt/aivideomatrix.jpg" alt="AI Video Matrix" onerror="this.remove()">
+        <span class="play">↗</span>
+      </a>
+      <div class="media-cap">
+        <h3>AI Video Matrix</h3>
+        <p><span class="es">Matriz comparativa de modelos de vídeo IA: precio, calidad y casos de uso. (Turbo2)</span><span class="en">Comparison matrix of AI video models: price, quality and use cases. (Turbo2)</span></p>
+        <div class="row"><span class="src">Web app</span><a class="mini" href="https://aleixperdigo.github.io/turbo2-price-matrix/" target="_blank" rel="noopener"><span class="es">Abrir matriz ↗</span><span class="en">Open matrix ↗</span></a></div>
+      </div>
+    </div>
+
+    <!-- HAMSTER CLICKER -->
+    <div class="media">
+      <a class="poster" href="https://aleixperdigo.github.io/hamsterclick/" target="_blank" rel="noopener">
+        <img loading="lazy" decoding="async" class="pimg" src="assets/opt/hamster-clicker.jpg" alt="Hamster Clicker" onerror="this.remove()">
+        <span class="play">↗</span>
+        <span class="pbig">Hamster<br>Clicker</span>
+      </a>
+      <div class="media-cap">
+        <h3>Hamster Clicker</h3>
+        <p><span class="es">Juego idle/clicker con estética IA, personaje y assets generados.</span><span class="en">Idle/clicker game with an AI aesthetic, generated character and assets.</span></p>
+        <div class="row"><span class="src">Game</span><a class="mini" href="https://aleixperdigo.github.io/hamsterclick/" target="_blank" rel="noopener"><span class="es">Jugar ↗</span><span class="en">Play ↗</span></a></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 05 CHARLAS -->
+<section id="charlas" class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <h2 class="sec-title display"><span class="es">Charlas</span><span class="en">Talks</span></h2>
+    <span class="sec-tag"><span class="es">Ponencias & keynotes · IA:HUB Barcelona</span><span class="en">Talks & keynotes · IA:HUB Barcelona</span></span>
+  </div>
+  <div class="grid three">
+
+    <!-- CHARLA 01 · AI VIDEO BENCHMARK -->
+    <div class="media">
+      <a class="poster mag" href="https://www.linkedin.com/posts/philippe-rouger-957b6b50_v%C3%ADdeo-con-ia-hoy-qui%C3%A9n-manda-cu%C3%A1nto-cuesta-activity-7467975375474548738-Mftr?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAao6GcBBnqlC5OXEeNZm-v2rZBN0SG8g6o" target="_blank" rel="noopener">
+        <img loading="lazy" decoding="async" class="pimg" src="assets/opt/charla-benchmark.jpg" alt="AI Video Benchmark, IA:HUB Barcelona" onerror="this.remove()">
+        <span class="play">↗</span>
+      </a>
+      <div class="media-cap">
+        <h3>AI Video Benchmark</h3>
+        <p><span class="es">«Vídeo con IA, hoy: quién manda, cuánto cuesta y qué se puede hacer». Comparativa de modelos de vídeo generativo.</span><span class="en">"AI video today: who leads, what it costs and what's possible." Benchmark of generative video models.</span></p>
+        <div class="row"><span class="src">IA:HUB Barcelona · <span class="es">9 jun 2026</span><span class="en">Jun 9, 2026</span></span><a class="mini" href="https://www.linkedin.com/posts/philippe-rouger-957b6b50_v%C3%ADdeo-con-ia-hoy-qui%C3%A9n-manda-cu%C3%A1nto-cuesta-activity-7467975375474548738-Mftr?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAao6GcBBnqlC5OXEeNZm-v2rZBN0SG8g6o" target="_blank" rel="noopener">LinkedIn ↗</a></div>
+      </div>
+    </div>
+
+    <!-- CHARLA 02 · AI VIDEO REVOLUTION -->
+    <div class="media">
+      <a class="poster teal" href="https://www.youtube.com/watch?v=IHwf6sMTiaI" target="_blank" rel="noopener">
+        <img loading="lazy" decoding="async" class="pimg" src="assets/opt/charla-revolution.jpg" alt="AI Video Revolution, IA:HUB Barcelona" onerror="this.remove()">
+        <span class="play">▶</span>
+      </a>
+      <div class="media-cap">
+        <h3>AI Video Revolution</h3>
+        <p><span class="es">Mini documental sobre el impacto de la IA en el audiovisual. Internet transformó la distribución; la IA está transformando la creación.</span><span class="en">Mini documentary on AI's impact in audiovisual. The Internet transformed distribution; AI is transforming creation.</span></p>
+        <div class="row"><span class="src">IA:HUB Barcelona · <span class="es">10 dic 2025</span><span class="en">Dec 10, 2025</span></span><a class="mini" href="https://www.youtube.com/watch?v=IHwf6sMTiaI" target="_blank" rel="noopener"><span class="es">Ver corto ↗</span><span class="en">Watch ↗</span></a><a class="mini" href="https://www.linkedin.com/posts/philippe-rouger-957b6b50_ai-video-revolution-un-mini-documental-activity-7401940641372340224-QZzL?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAao6GcBBnqlC5OXEeNZm-v2rZBN0SG8g6o" target="_blank" rel="noopener">LinkedIn ↗</a></div>
+      </div>
+    </div>
+
+    <!-- CHARLA 03 · MASTERCLASS · DE SORA2 A VEO3.1 -->
+    <div class="media">
+      <a class="poster teal" href="https://www.linkedin.com/posts/philippe-rouger-957b6b50_quedan-plazas-para-la-masterclass-de-este-activity-7396493668762857472-Ax1a?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAao6GcBBnqlC5OXEeNZm-v2rZBN0SG8g6o" target="_blank" rel="noopener">
+        <img loading="lazy" decoding="async" class="pimg" src="assets/opt/charla-masterclass.jpg" alt="Masterclass, De Sora2 a Veo3.1, IA:HUB Barcelona" onerror="this.remove()">
+        <span class="play">↗</span>
+      </a>
+      <div class="media-cap">
+        <h3><span class="es">Masterclass · De Sora2 a Veo3.1</span><span class="en">Masterclass · From Sora2 to Veo3.1</span></h3>
+        <p><span class="es">«De Sora2 a Veo3.1 pasando por Seedance y Kling»: los mejores modelos para crear vídeos con IA.</span><span class="en">"From Sora2 to Veo3.1 via Seedance and Kling": the best models for creating AI video.</span></p>
+        <div class="row"><span class="src">IA:HUB Barcelona · <span class="es">20 nov 2025</span><span class="en">Nov 20, 2025</span></span><a class="mini" href="https://www.linkedin.com/posts/philippe-rouger-957b6b50_quedan-plazas-para-la-masterclass-de-este-activity-7396493668762857472-Ax1a?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAao6GcBBnqlC5OXEeNZm-v2rZBN0SG8g6o" target="_blank" rel="noopener">LinkedIn ↗</a></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 06 DOCENCIA -->
+<section id="docencia" class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">06</span>
+    <h2 class="sec-title display"><span class="es">Docencia IA</span><span class="en">AI teaching</span></h2>
+    <span class="sec-tag"><span class="es">Imagen + vídeo generativo</span><span class="en">Generative image + video</span></span>
+  </div>
+  <div class="grid three">
+    <div class="card">
+      <span class="chip blk">SHIFTA BY ELISAVA</span>
+      <h3><span class="es">Profesor de IA de vídeo</span><span class="en">AI video instructor</span></h3>
+      <div class="role"><span class="es">Posgrado en Producción Audiovisual con IA</span><span class="en">Postgrad in AI Audiovisual Production</span></div>
+      <p><span class="es">Docente del módulo de <b style="color:var(--text)">vídeo generativo</b>: del prompt al plano, modelos de imagen y vídeo, producción y postproducción para piezas reales.</span><span class="en">Lecturer for the <b style="color:var(--text)">generative video</b> module: prompt to shot, image/video models, production and post for real pieces.</span></p>
+      <a class="cardlink" href="https://weareshifta.com/formaciones/posgrado-en-produccion-audiovisual-ia/" target="_blank" rel="noopener"><span class="es">Ver el curso</span><span class="en">View course</span></a>
+    </div>
+    <div class="card">
+      <span class="chip teal">ELISAVA</span>
+      <h3><span class="es">IA de vídeo</span><span class="en">AI video</span></h3>
+      <div class="role"><span class="es">Escuela de Diseño e Ingeniería de Barcelona</span><span class="en">Barcelona School of Design & Engineering</span></div>
+      <p><span class="es">Clases de <b style="color:var(--text)">inteligencia artificial aplicada al vídeo</b> en los programas de creatividad y producción audiovisual con IA de Elisava.</span><span class="en">Classes on <b style="color:var(--text)">AI applied to video</b> within Elisava's creativity and AI audiovisual production programs.</span></p>
+      <a class="cardlink" href="https://ai.elisava.net/" target="_blank" rel="noopener">Elisava AI</a>
+    </div>
+    <div class="card">
+      <span class="chip mag">URL · BLANQUERNA</span>
+      <h3><span class="es">Imagen + Vídeo</span><span class="en">Image + Video</span></h3>
+      <div class="role"><span class="es">Posgrado de Estética · dir. Marta Marín</span><span class="en">Postgrad in Aesthetics · dir. Marta Marín</span></div>
+      <p><span class="es">Clase de <b style="color:var(--text)">imagen y vídeo con IA</b> en el Posgrado de Estética de la Universitat Ramon Llull, Blanquerna.</span><span class="en">Class on <b style="color:var(--text)">AI image and video</b> in the Aesthetics Postgrad at Universitat Ramon Llull, Blanquerna.</span></p>
+      <span class="meta">Universitat Ramon Llull · Barcelona</span>
+    </div>
+  </div>
+</section>
+
+<!-- 07 COMPETENCIAS -->
+<section id="competencias" class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <h2 class="sec-title display"><span class="es">Competencias</span><span class="en">Skills</span></h2>
+    <span class="sec-tag"><span class="es">Stack & herramientas</span><span class="en">Stack & tools</span></span>
+  </div>
+  <div class="skills">
+    <div class="skill-row lila">
+      <div class="skill-cat lila">AI Image</div>
+      <div class="skill-pills">
+        <span class="pill">Seedream 5 Pro</span>
+        <span class="pill">Nano Banana 2</span>
+        <span class="pill">Nano Banana Pro</span>
+        <span class="pill">Midjourney</span>
+        <span class="pill">Higgsfield Soul &amp; Soul Cinema</span>
+      </div>
+    </div>
+    <div class="skill-row teal">
+      <div class="skill-cat teal">AI Video</div>
+      <div class="skill-pills">
+        <span class="pill">Seedance 2.5</span>
+        <span class="pill">Seedance 2</span>
+        <span class="pill">MiniMax H3 Max</span>
+        <span class="pill">Kling Omnireference &amp; Multi-reference <small>expert</small></span>
+        <span class="pill">Wan 3.0</span>
+        <span class="pill">LTX</span>
+      </div>
+    </div>
+    <div class="skill-row lila">
+      <div class="skill-cat lila">Wrappers &amp; UI</div>
+      <div class="skill-pills">
+        <span class="pill">Magnific</span>
+        <span class="pill">ComfyUI</span>
+        <span class="pill">Higgsfield</span>
+      </div>
+    </div>
+    <div class="skill-row teal">
+      <div class="skill-cat teal">Upscale</div>
+      <div class="skill-pills">
+        <span class="pill">Topaz Video AI</span>
+        <span class="pill">Magnific</span>
+      </div>
+    </div>
+    <div class="skill-row lila">
+      <div class="skill-cat lila">3D</div>
+      <div class="skill-pills">
+        <span class="pill">Blender</span>
+      </div>
+    </div>
+    <div class="skill-row teal">
+      <div class="skill-cat teal">Editing</div>
+      <div class="skill-pills">
+        <span class="pill">DaVinci Resolve</span>
+        <span class="pill">Adobe Premiere</span>
+        <span class="pill">CapCut</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 OTROS -->
+<section id="otros" class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">08</span>
+    <h2 class="sec-title display"><span class="es">Otros</span><span class="en">More</span></h2>
+    <span class="sec-tag"><span class="es">Shorts & experimentos</span><span class="en">Shorts & experiments</span></span>
+  </div>
+  <div class="shorts-grid">
+
+    <!-- SHORT 01 · ORUGA -->
+    <div class="short">
+      <a class="sposter" href="https://youtube.com/shorts/nbsywrfnUq8" target="_blank" rel="noopener">
+        <span class="play">▶</span>
+        <img loading="lazy" decoding="async" src="assets/opt/oruga.jpg" alt="YouTube Short" onerror="this.remove()">
+      </a>
+      <div class="scap"><a href="https://youtube.com/shorts/nbsywrfnUq8" target="_blank" rel="noopener">YouTube Shorts ↗</a></div>
+    </div>
+
+    <!-- SHORT 02 · RUSTY -->
+    <div class="short">
+      <a class="sposter" href="https://www.youtube.com/shorts/7HKT3HyISvA" target="_blank" rel="noopener">
+        <span class="play">▶</span>
+        <img loading="lazy" decoding="async" src="assets/opt/rusty.jpg" alt="YouTube Short" onerror="this.remove()">
+      </a>
+      <div class="scap"><a href="https://www.youtube.com/shorts/7HKT3HyISvA" target="_blank" rel="noopener">YouTube Shorts ↗</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 09 TRAYECTORIA -->
+<section id="trayectoria" class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">09</span>
+    <h2 class="sec-title display"><span class="es">Trayectoria</span><span class="en">Career</span></h2>
+    <span class="sec-tag"><span class="es">15+ años</span><span class="en">15+ years</span></span>
+  </div>
+  <div class="xp">
+    <div class="xp-row">
+      <div><div class="logos"><span class="lgbox"><img class="lg mono" src="assets/logos/lavinia.png" alt="Lavinia"></span><span class="lgbox"><img class="lg mono" src="assets/logos/goroka.svg" alt="Goroka"></span></div><h3>AI Content Director</h3><div class="co">Lavinia & Goroka</div></div>
+      <p><span class="es">Creación y crecimiento de una vertical full-production de IA dentro del grupo Lavinia: del prompt al broadcast en publicidad, institucional y educación.</span><span class="en">Building and scaling a full-production AI vertical inside the Lavinia group: prompt to broadcast across advertising, institutional and education.</span></p>
+      <div class="when">11/24 → <span class="es">hoy</span><span class="en">now</span></div>
+    </div>
+    <div class="xp-row">
+      <div><div class="logos"><span class="lgbox"><img class="lg mono" src="assets/logos/appletree.svg" alt="Apple Tree"></span></div><h3>Digital Innovation Director</h3><div class="co">Apple Tree Communications</div></div>
+      <p><span class="es">Roadmap interno de IA, creación de LLMs a medida y estrategia de contenido para Danone, Mapfre, Aldi, Seat y Manchester City.</span><span class="en">Internal AI roadmap, custom LLM creation and content strategy for Danone, Mapfre, Aldi, Seat and Manchester City.</span></p>
+      <div class="when">3/23 → 11/23</div>
+    </div>
+    <div class="xp-row">
+      <div><div class="logos"><span class="lgbox"><img class="lg mult" src="assets/logos/edelman.gif" alt="Edelman"></span></div><h3><span class="es">Digital Director · Dir. Contenidos Social</span><span class="en">Digital Director · Social Content Dir.</span></h3><div class="co">Edelman Spain</div></div>
+      <p><span class="es">Dirección de comunicación, social media y experiencias phygital para AstraZeneca, Iberostar, HP, PayPal, LinkedIn, Tinder, TikTok, Lululemon, Galderma y Alexion. <b style="color:var(--text)">Cannes Lion 2022</b> por #RealVoicesOfPride.</span><span class="en">Leading communications, social media and phygital experiences for AstraZeneca, Iberostar, HP, PayPal, LinkedIn, Tinder, TikTok, Lululemon, Galderma and Alexion. <b style="color:var(--text)">Cannes Lion 2022</b> for #RealVoicesOfPride.</span></p>
+      <div class="when">3/21 → 8/22</div>
+    </div>
+    <div class="xp-row">
+      <div><div class="logos"><span class="lgbox"><img class="lg inv" src="assets/logos/playground.png" alt="PlayGround"></span></div><h3><span class="es">Head of Brand Studio · Dir. Contenidos Social</span><span class="en">Head of Brand Studio · Social Content Dir.</span></h3><div class="co">PlayGround</div></div>
+      <p><span class="es">Dirección de un equipo de 20 personas creando contenido social always-on en vídeo para Netflix, Danone, Movistar, BBVA, RedBull, Sprite (Coca-Cola), Gallina Blanca, Beefeater, Ajuntament de Barcelona, Purina (Nestlé), DMAX y Moritz.</span><span class="en">Leading a 20-person team creating always-on social video content for Netflix, Danone, Movistar, BBVA, RedBull, Sprite (Coca-Cola), Gallina Blanca, Beefeater, Barcelona City Council, Purina (Nestlé), DMAX and Moritz.</span></p>
+      <div class="when">4/17 → 1/21</div>
+    </div>
+    <div class="xp-row">
+      <div><div class="logos"><span class="lgbox"><img class="lg mono" src="assets/logos/tvrbo.png" alt="Tvrbo"></span></div><h3><span class="es">Content Director (socio)</span><span class="en">Content Director (partner)</span></h3><div class="co">Tvrbo</div></div>
+      <p><span class="es">Estudio de software para campañas web/app interactivas, content marketing y tech trends. Mango, Novartis, Orbit, Sanofi y eCommerce.</span><span class="en">Software studio for interactive web/app campaigns, content marketing and tech trends. Mango, Novartis, Orbit, Sanofi and eCommerce.</span></p>
+      <div class="when">3/12 → 4/17</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- 10 AWARDS -->
+<section id="awards" class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">10</span>
+    <h2 class="sec-title display"><span class="es">Premios</span><span class="en">Awards</span></h2>
+    <span class="sec-tag"><span class="es">Con enlace a cada fuente</span><span class="en">Each linked to its source</span></span>
+  </div>
+  <div class="rvop" id="real-voices-of-pride">
+    <h3 class="display rvop-t">Real Voices of Pride</h3>
+    <div class="rvop-sub">#RealVoicesOfPride · Edelman Spain × FELGTB · 2021-2022</div>
+    <p><span class="es">Voces LGTBIQ+ silenciadas en 72 países, puestas a salvo en TikTok con el lip-sync de otros perfiles. Los premios, con enlace a cada fuente:</span><span class="en">Silenced LGBTQIA+ voices from 72 countries, shared safely on TikTok through other people's lip-syncs. The awards, each linked to its source:</span></p>
+    <div class="awards">
+      <a class="award hl" href="https://marketing4ecommerce.net/espana-se-hace-con-2-oros-10-platas-y-25-bronces-en-cannes-lions-2022/" target="_blank" rel="noopener">Cannes Lions 2022 · Bronze Lion · Media ↗</a>
+      <a class="award" href="https://www2.eurobest.com/winners/2021/social_and_influencer/index.cfm?award=101" target="_blank" rel="noopener">Eurobest 2021 · Bronze · Social &amp; Influencer ↗</a>
+      <a class="award" href="https://www.oneclub.org/awards/theoneshow/-award/44752/realvoicesofpride/" target="_blank" rel="noopener">The One Show 2022 · Merit · Social ↗</a>
+      <a class="award" href="https://shortyawards.com/14th/realvoicesofpride" target="_blank" rel="noopener">Shorty Awards · Gold Honor TikTok ↗</a>
+      <a class="award" href="https://www.clubdecreatividad.com/archivodelacreatividad/pieza-122993.html" target="_blank" rel="noopener">Club de Creatividad 2022 · CdeC ↗</a>
+      <a class="award" href="https://www.warc.com/content/article/sabre-awards/felgtb-realvoicesofpride/146647" target="_blank" rel="noopener">SABRE Awards · WARC ↗</a>
+      <a class="award" href="https://creativepool.com/edelman/projects/realvoicesofpride-for-felgtb" target="_blank" rel="noopener">Creativepool Annual 2022 · Silver ↗</a>
+      <span class="award">El Ojo de Iberoamérica</span>
+      <span class="award">El Sol</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contacto">
+  <div class="wrap">
+    <h2 class="display"><span class="es">Hagamos algo<br><em>con IA.</em></span><span class="en">Let's build<br><em>with AI.</em></span></h2>
+    <p style="margin-top:20px;font-size:16px;max-width:560px;color:var(--muted)"><span class="es">Producción audiovisual con IA, dirección de contenido, formación y charlas. Barcelona, y donde haga falta.</span><span class="en">AI audiovisual production, content direction, training and talks. Barcelona, and wherever needed.</span></p>
+    <div class="foot-links">
+      <a href="mailto:aleixperdigo@gmail.com">aleixperdigo@gmail.com</a>
+      <a href="tel:+34661265719">+34 661 265 719</a>
+      <a href="https://linkedin.com/in/aleixperdigo" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="Aleix_Perdigo_Portfolio_2026.pdf" target="_blank" rel="noopener">CV PDF</a>
+    </div>
+    <div class="foot-meta">© 2026 Aleix Perdigó · AI Artist & Content Director · Barcelona · <span class="es">Web: sep 2026</span><span class="en">Web: Sep 2026</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var body=document.body;
+  function apply(attr,val,grpId){
+    body.setAttribute(attr,val);
+    var grp=document.getElementById(grpId);
+    grp.querySelectorAll('button').forEach(function(b){
+      var on=b.getAttribute(attr==='data-theme'?'data-theme-set':'data-lang-set')===val;
+      b.classList.toggle('on',on);
+    });
+  }
+  // theme locked to editorial (brutal CSS kept but removed from selector)
+  body.setAttribute('data-theme','editorial');
+  var l=localStorage.getItem('ap-lang')||'es';
+  apply('data-lang',l,'langToggle');
+  document.documentElement.lang=l;
+
+  document.getElementById('langToggle').addEventListener('click',function(e){
+    var b=e.target.closest('[data-lang-set]'); if(!b)return;
+    var v=b.getAttribute('data-lang-set'); apply('data-lang',v,'langToggle'); localStorage.setItem('ap-lang',v); document.documentElement.lang=v;
+  });
+})();
+</script>
+</body>
+</html>
