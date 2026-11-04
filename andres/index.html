@@ -42,7 +42,11 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .hero__fg { z-index: 2; }
 /* ponytail: la foto se desplaza a la derecha para que ANDRÉS quepa entero; el hueco izquierdo se rellena con la misma foto en espejo. Si se nota la costura, outpaint del cielo en Magnific */
 .hero__bg, .hero__fg { left: var(--shift); }
-.hero__mirror { z-index: 0; left: calc(var(--shift) - 100%); transform: scaleX(-1); }
+.hero__mirror { z-index: 0; left: calc(var(--shift) - 100%); }
+/* parallax: --p = px scrolled inside the hero (JS). Photo layers move together so the cutout never separates from its own background */
+.hero__bg, .hero__fg { transform: translate3d(0, calc(var(--p, 0) * 0.25px), 0); will-change: transform; }
+.hero__mirror { transform: translate3d(0, calc(var(--p, 0) * 0.25px), 0) scaleX(-1); will-change: transform; }
+.hero__name { transform: translate3d(0, calc(var(--p, 0) * 0.55px), 0); will-change: transform; }
 .hero__name {
   position: absolute; z-index: 1; left: 0; right: 0; top: 13%;
   margin: 0; white-space: nowrap; display: flex; justify-content: space-between; padding-inline: 1.6% 2.4%;
@@ -203,5 +207,16 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   <span>Andrés Pérez · Barcelona</span>
   <span>Boceto v2</span>
 </footer>
+
+<script>
+(() => {
+  const hero = document.querySelector('.hero');
+  if (!hero || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let queued = false;
+  const update = () => { queued = false; hero.style.setProperty('--p', Math.min(scrollY, hero.offsetHeight).toFixed(1)); };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+})();
+</script>
 
 </html>
