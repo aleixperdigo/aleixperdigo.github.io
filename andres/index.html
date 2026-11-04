@@ -77,11 +77,11 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .svc__name { display: block; font-weight: 900; font-size: clamp(44px, 9vw, 132px); line-height: 0.85; letter-spacing: -0.06em; text-transform: uppercase; }
 .svc__line { display: block; margin-top: 8px; font-size: clamp(14px, 1.3vw, 17px); font-weight: 600; color: var(--dim); }
 .svc summary:hover .svc__line, .svc[open] .svc__line { color: var(--on-c); }
-.svc summary:hover .svc__plus, .svc[open] .svc__plus { background: var(--on-c); color: var(--c); }
+.svc summary:hover .svc__plus, .svc[open] .svc__plus { background: rgba(0, 0, 0, 0.14); color: var(--on-c); }
 .svc__plus {
   width: clamp(48px, 6vw, 84px); aspect-ratio: 1; max-width: 100%; border-radius: 50%;
   display: grid; place-items: center;
-  background: var(--ink); color: var(--paper);
+  background: rgba(255, 255, 255, 0.12); color: var(--ink);
   font-size: clamp(28px, 3.4vw, 48px); font-weight: 400; line-height: 1;
   transition: transform 0.25s ease;
 }
@@ -123,7 +123,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
     <details class="svc" style="--c: var(--c-tarantinos)">
       <summary class="wrap">
         <span><span class="svc__name">Tarantinos</span><span class="svc__line">Banda tributo a la música de las películas de Quentin Tarantino</span></span>
-        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="45%" height="45%" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
+        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
       <div class="svc__more wrap">
         <p>Tarantino elige la música de sus películas como quien graba una cinta para un amigo: surf, soul, rock and roll y spaghetti western. Tarantinos convierte esa selección en un concierto con banda completa.</p>
@@ -134,7 +134,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
     <details class="svc" style="--c: var(--c-rumba)">
       <summary class="wrap">
         <span><span class="svc__name">Rumba</span><span class="svc__line">Clásicos internacionales en clave de rumba catalana</span></span>
-        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="45%" height="45%" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
+        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
       <div class="svc__more wrap">
         <p>Canciones que todo el mundo conoce, pasadas por el ventilador de la guitarra rumbera. Del pop al soul, con palmas y ganas de bailar desde el primer tema.</p>
@@ -145,7 +145,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
     <details class="svc" style="--c: var(--c-piano)">
       <summary class="wrap">
         <span><span class="svc__name">Piano Man</span><span class="svc__line">Estándares y grandes éxitos del pop al piano</span></span>
-        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="45%" height="45%" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
+        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
       <div class="svc__more wrap">
         <p>Andrés solo, al piano y a la voz. Estándares de siempre y éxitos del pop para acompañar una cena o un cóctel.</p>
@@ -156,7 +156,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
     <details class="svc" style="--c: var(--c-eventos)">
       <summary class="wrap">
         <span><span class="svc__name">Tu evento</span><span class="svc__line">El estilo que quieras para tu evento</span><span class="tags"><span>Jazz</span><span>Rock</span><span>Funk</span></span></span>
-        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="45%" height="45%" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
+        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
       <div class="svc__more wrap">
         <p>Bodas, fiestas privadas y eventos de empresa. Jazz para la ceremonia o el cóctel, rock o funk para cuando toca bailar. El repertorio se adapta a cada evento.</p>
