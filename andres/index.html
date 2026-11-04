@@ -118,6 +118,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .svc__img { margin: 0; }
 .svc__img--pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .svc__img.svc__img--pair img { aspect-ratio: 3 / 4; }
+.svc__img.svc__img--tall img { aspect-ratio: 4 / 5; object-position: 60% 45%; }
 .svc__img img { display: block; width: 100%; height: auto; max-width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
 @media (max-width: 720px) { .svc__more, .svc__more--media { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .svc summary, .svc__plus { transition: none; } }
@@ -168,7 +169,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
       <div class="svc__more svc__more--media wrap">
         <figure class="svc__img svc__img--pair"><img src="rumba-1.webp" alt="Andrés cantando rumba con la guitarra en un bar de Barcelona" width="946" height="1504" decoding="async"><img src="rumba-2.webp" alt="Andrés sonriendo con un compañero de rumba" width="946" height="932" decoding="async"></figure>
         <p data-i18n="r_p">Canciones que todo el mundo conoce, pasadas por el ventilador de la guitarra rumbera. Del pop al soul, con palmas y ganas de bailar desde el primer tema.</p>
-        <ul data-i18n="r_ul"><li>Rumba en directo en Alegría</li><li>Para fiestas, terrazas y celebraciones</li></ul>
+        <ul data-i18n="r_ul"><li>Rumba en directo en el Bar Alegría, un bar modernista de 1899 en Gran Via con Comte Borrell</li><li>Para fiestas, terrazas y celebraciones</li></ul>
       </div>
     </details>
 
@@ -177,9 +178,10 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
         <span><span class="svc__name">Piano Man</span><span class="svc__line" data-i18n="p_line">Estándares y grandes éxitos del pop al piano</span></span>
         <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
-      <div class="svc__more wrap">
+      <div class="svc__more svc__more--media wrap">
+        <figure class="svc__img svc__img--tall"><img src="piano.webp" alt="Andrés cantando y tocando el piano en un restaurante" width="800" height="1422" decoding="async"></figure>
         <p data-i18n="p_p">Andrés solo, al piano y a la voz. Estándares de siempre y éxitos del pop para acompañar una cena o un cóctel.</p>
-        <ul data-i18n="p_ul"><li>Toca regularmente en Bellinis</li><li>Para restaurantes, hoteles y cenas privadas</li></ul>
+        <ul data-i18n="p_ul"><li>Toca regularmente en Bella's, en la Diagonal</li><li>Para restaurantes, hoteles y cenas privadas</li></ul>
       </div>
     </details>
 
@@ -249,10 +251,10 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
     t_ul: '<li>The songs from Pulp Fiction, Kill Bill and Reservoir Dogs</li><li>For venues, festivals and themed parties</li>',
     r_line: 'International classics reworked as Catalan rumba',
     r_p: 'Songs everyone knows, played with the driving strum of the rumba guitar. From pop to soul, with handclaps and people dancing from the first song.',
-    r_ul: '<li>Live rumba at Alegría</li><li>For parties, terraces and celebrations</li>',
+    r_ul: '<li>Live rumba at Bar Alegría, an 1899 modernista bar on Gran Via and Comte Borrell</li><li>For parties, terraces and celebrations</li>',
     p_line: 'Standards and pop hits on the piano',
     p_p: 'Andrés on his own, at the piano and singing. Timeless standards and pop hits to accompany a dinner or a cocktail.',
-    p_ul: '<li>Plays regularly at Bellinis</li><li>For restaurants, hotels and private dinners</li>',
+    p_ul: '<li>Plays regularly at Bella\'s, on Diagonal</li><li>For restaurants, hotels and private dinners</li>',
     e_name: 'Your event',
     e_line: 'The style you want for your event',
     e_p: "Weddings, private parties and corporate events. Jazz for the ceremony or the cocktail hour, pop, rock or funk when it's time to dance. The setlist adapts to each event.",
