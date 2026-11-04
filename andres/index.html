@@ -10,12 +10,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;900&display=swap">
 <style>
-/* Layout: cabecera de 3/5 de pantalla con tres capas (cielo, nombre gigante, Andrés recortado); debajo LIVE MUSIC y los servicios como franjas-botón a todo el ancho. Un solo tema claro, deliberado, como la referencia. */
+/* Layout: cabecera de 3/5 de pantalla con tres capas (cielo, nombre gigante, Andrés recortado); debajo LIVE MUSIC y los servicios como franjas-botón a todo el ancho. Un solo tema oscuro, deliberado: fondo negro y letra blanca. */
 :root {
-  --paper: #ffffff;
-  --ink: #0b0d12;
-  --dim: #5c6270;
-  --line: #e3e5ea;
+  --paper: #050505;
+  --ink: #ffffff;
+  --dim: #9a9ea8;
+  --line: #26282e;
+  --on-c: #050505;
   --sky: #3d86d6;
   --c-tarantinos: #f5c400;
   --c-rumba: #ff5a36;
@@ -23,7 +24,7 @@
   --c-eventos: #3d86d6;
   --font: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
   --pad: clamp(16px, 3vw, 40px);
-  color-scheme: light;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
@@ -71,11 +72,12 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 .svc summary::-webkit-details-marker { display: none; }
-.svc summary:hover, .svc[open] summary { background: var(--c); }
+.svc summary:hover, .svc[open] summary { background: var(--c); color: var(--on-c); }
 .svc summary:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .svc__name { display: block; font-weight: 900; font-size: clamp(44px, 9vw, 132px); line-height: 0.85; letter-spacing: -0.06em; text-transform: uppercase; }
 .svc__line { display: block; margin-top: 8px; font-size: clamp(14px, 1.3vw, 17px); font-weight: 600; color: var(--dim); }
-.svc summary:hover .svc__line, .svc[open] .svc__line { color: var(--ink); }
+.svc summary:hover .svc__line, .svc[open] .svc__line { color: var(--on-c); }
+.svc summary:hover .svc__plus, .svc[open] .svc__plus { background: var(--on-c); color: var(--c); }
 .svc__plus {
   width: clamp(48px, 6vw, 84px); aspect-ratio: 1; max-width: 100%; border-radius: 50%;
   display: grid; place-items: center;
@@ -84,11 +86,11 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   transition: transform 0.25s ease;
 }
 .svc[open] .svc__plus { transform: rotate(180deg); }
-.svc__more { padding-block: 8px clamp(24px, 3vw, 40px); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px clamp(24px, 4vw, 64px); background: var(--c); }
+.svc__more { padding-block: 8px clamp(24px, 3vw, 40px); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px clamp(24px, 4vw, 64px); background: var(--c); color: var(--on-c); }
 .svc__more p { margin: 0; font-size: clamp(17px, 1.6vw, 21px); line-height: 1.45; max-width: 52ch; }
 .svc__more ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .svc__more li { font-weight: 600; font-size: 15px; padding-left: 18px; position: relative; }
-.svc__more li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+.svc__more li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .tags span { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: 1.5px solid currentColor; padding: 3px 9px; border-radius: 99px; }
 @media (max-width: 720px) { .svc__more { grid-template-columns: minmax(0, 1fr); } }
