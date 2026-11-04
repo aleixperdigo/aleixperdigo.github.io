@@ -47,9 +47,11 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 }
 .hero__bg { z-index: 0; }
 .hero__fg { z-index: 2; }
-/* parallax: --p = px scrolled inside the hero (JS). Photo layers move together so the cutout never separates from its own background */
-.hero__bg, .hero__fg { transform: translate3d(0, calc(var(--p, 0) * 0.25px), 0); will-change: transform; }
-.hero__name { transform: translate3d(0, calc(var(--p, 0) * 0.55px), 0); will-change: transform; }
+/* parallax: --p = px scrolled inside the hero (JS).
+   Fondo, nombre y silueta viven en UNA capa (.hero__stage): el navegador los pinta juntos y nunca se ve la silueta antes que el cielo.
+   El nombre solo añade su desplazamiento extra (0.55 - 0.25 = 0.30) con un translate 2D, que no crea capa propia. */
+.hero__stage { position: absolute; inset: 0; transform: translate3d(0, calc(var(--p, 0) * 0.25px), 0); will-change: transform; }
+.hero__name { transform: translate(0, calc(var(--p, 0) * 0.30px)); }
 .hero__name {
   position: absolute; z-index: 1; left: 0; right: 0; top: 13%;
   margin: 0; white-space: nowrap; display: flex; justify-content: space-between; padding-inline: 1.6% 13%;
@@ -138,9 +140,11 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 
 <span class="lang lang--fixed" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es" aria-pressed="true">ES</button><button type="button" data-lang="en" aria-pressed="false">EN</button></span>
 <header class="hero">
-  <img class="hero__layer hero__bg" src="hero.webp" decoding="sync" fetchpriority="high" alt="" width="2000" height="857">
-  <h1 class="hero__name"><span>Andrés </span><span>Pérez</span></h1>
-  <img class="hero__layer hero__fg" src="cutout.webp" decoding="sync" fetchpriority="high" alt="Andrés Pérez tocando la guitarra acústica" width="2000" height="857">
+  <div class="hero__stage">
+    <img class="hero__layer hero__bg" src="hero.webp" decoding="sync" fetchpriority="high" alt="" width="2000" height="857">
+    <h1 class="hero__name"><span>Andrés </span><span>Pérez</span></h1>
+    <img class="hero__layer hero__fg" src="cutout.webp" decoding="sync" fetchpriority="high" alt="Andrés Pérez tocando la guitarra acústica" width="2000" height="857">
+  </div>
   <nav class="hero__bar wrap" aria-label="Principal">
     <span>Live music · Barcelona</span>
     <span class="hero__links"><a href="#servicios" data-i18n="nav_services">Servicios</a><a href="#who">Who I am</a></span>
@@ -162,7 +166,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
         <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
       <div class="svc__more svc__more--media wrap">
-        <figure class="svc__img svc__img--pair"><img src="rumba-1.webp" alt="Andrés cantando rumba con la guitarra en un bar de Barcelona" width="946" height="1504" decoding="async" fetchpriority="low"><img src="rumba-2.webp" alt="Andrés sonriendo con un compañero de rumba" width="946" height="932" decoding="async" fetchpriority="low"></figure>
+        <figure class="svc__img svc__img--pair"><img src="rumba-1.webp" alt="Andrés cantando rumba con la guitarra en un bar de Barcelona" width="946" height="1504" decoding="async"><img src="rumba-2.webp" alt="Andrés sonriendo con un compañero de rumba" width="946" height="932" decoding="async"></figure>
         <p data-i18n="r_p">Canciones que todo el mundo conoce, pasadas por el ventilador de la guitarra rumbera. Del pop al soul, con palmas y ganas de bailar desde el primer tema.</p>
         <ul data-i18n="r_ul"><li>Rumba en directo en Alegría</li><li>Para fiestas, terrazas y celebraciones</li></ul>
       </div>
@@ -185,7 +189,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
         <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
       <div class="svc__more svc__more--media wrap">
-        <figure class="svc__img"><img src="tarantinos.webp" alt="Los cuatro músicos de Tarantinos, de traje, en una azotea de Barcelona al atardecer" width="923" height="918" decoding="async" fetchpriority="low"></figure>
+        <figure class="svc__img"><img src="tarantinos.webp" alt="Los cuatro músicos de Tarantinos, de traje, en una azotea de Barcelona al atardecer" width="923" height="918" decoding="async"></figure>
         <p data-i18n="t_p">Tarantino elige la música de sus películas como quien graba una cinta para un amigo: surf, soul, rock and roll y spaghetti western. Tarantinos convierte esa selección en un concierto con banda completa.</p>
         <ul data-i18n="t_ul"><li>Los temas de Pulp Fiction, Kill Bill o Reservoir Dogs</li><li>Para salas, festivales y fiestas temáticas</li></ul>
       </div>
@@ -204,7 +208,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   </section>
   <section class="who wrap" id="who" aria-labelledby="who-t">
     <figure class="who__photo">
-      <img src="studio.webp" alt="Andrés Pérez en su estudio, delante de la mesa de mezclas" width="738" height="920" decoding="async" fetchpriority="low">
+      <img src="studio.webp" alt="Andrés Pérez en su estudio, delante de la mesa de mezclas" width="738" height="920" decoding="async">
       <figcaption data-i18n="who_cap">En el estudio</figcaption>
     </figure>
     <div class="who__body">
@@ -284,13 +288,21 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   // cargada Y decodificada, para que fondo y recorte salgan en el mismo fotograma (decode con tope: en algún navegador se cuelga)
   const ready = i => loaded(i).then(() => Promise.race([i.decode().catch(() => {}), new Promise(r => setTimeout(r, 1500))]));
   const imgs = [...document.querySelectorAll('.hero img')].map(ready);
+  // y además TODO lo de la página (fotos de los desplegables incluidas)
+  const pageLoaded = document.readyState === 'complete' ? Promise.resolve() : new Promise(r => addEventListener('load', r, { once: true }));
   Promise.race([
     Promise.all([
       document.fonts.load('900 1em "Inter Tight"'), document.fonts.load('600 1em "Inter Tight"'),
-      document.fonts.load('italic 400 1em Fraunces'), ...imgs
+      document.fonts.load('italic 400 1em Fraunces'), pageLoaded, ...imgs
     ]),
-    new Promise(r => setTimeout(r, 3000))   // nunca más de 3 s en negro
-  ]).then(() => requestAnimationFrame(() => requestAnimationFrame(show)), show);
+    new Promise(r => setTimeout(r, 5000))   // nunca más de 5 s en negro
+  ]).then(() => {
+    // esperar a que el navegador pinte; si la pestaña está en segundo plano (sin fotogramas), mostrar igual
+    let done = false;
+    const go = () => { if (!done) { done = true; show(); } };
+    requestAnimationFrame(() => requestAnimationFrame(go));
+    setTimeout(go, 150);
+  }, show);
 })();
 </script>
 
