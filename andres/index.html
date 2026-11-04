@@ -8,7 +8,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;900&family=Fraunces:opsz,wght@9..144,400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;900&family=Fraunces:ital,opsz,wght,SOFT,WONK@1,9..144,300..700,0..100,0..1&display=swap">
 <style>
 /* Layout: cabecera de 3/5 de pantalla con tres capas (cielo, nombre gigante, Andrés recortado); debajo LIVE MUSIC y los servicios como franjas-botón a todo el ancho. Un solo tema oscuro, deliberado: fondo negro y letra blanca. */
 :root {
@@ -44,7 +44,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .hero__name { transform: translate3d(0, calc(var(--p, 0) * 0.55px), 0); will-change: transform; }
 .hero__name {
   position: absolute; z-index: 1; left: 0; right: 0; top: 13%;
-  margin: 0; white-space: nowrap; display: flex; justify-content: space-between; padding-inline: 1.6% 10%;
+  margin: 0; white-space: nowrap; display: flex; justify-content: space-between; padding-inline: 1.6% 13%;
   font-weight: 900; font-size: 9.6vw; line-height: 0.8; letter-spacing: -0.065em; text-transform: uppercase;
 }
 .hero__name span { display: inline; }
@@ -70,8 +70,8 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 
 /* ---------- Live music ---------- */
 .lead { padding-block: clamp(48px, 9vw, 120px) clamp(28px, 4vw, 56px); text-align: center; }
-/* mitad del tamaño de los nombres de servicio (clamp 44px, 9vw, 132px) */
-.lead h2 { margin: 0; font-family: var(--serif); font-weight: 500; font-optical-sizing: auto; font-size: clamp(22px, 4.5vw, 66px); line-height: 1; letter-spacing: 0; text-transform: uppercase; }
+/* 1,5x la mitad del tamaño de los servicios; cursiva de Fraunces con ejes SOFT y WONK para el toque desenfadado */
+.lead h2 { margin: 0; font-family: var(--serif); font-style: italic; font-weight: 400; font-optical-sizing: auto; font-variation-settings: "SOFT" 100, "WONK" 1; font-size: clamp(33px, 6.75vw, 99px); line-height: 1; letter-spacing: -0.01em; text-transform: none; }
 .lead p { margin: 18px auto 0; max-width: 46ch; color: var(--dim); font-size: clamp(15px, 1.4vw, 18px); }
 
 /* ---------- Servicios: franjas-botón ---------- */
