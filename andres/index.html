@@ -64,10 +64,22 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .hero a { color: inherit; text-decoration: none; }
 .hero a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .hero__links { display: flex; align-items: center; gap: 18px; }
-.lang { display: inline-flex; border: 1.5px solid #fff; border-radius: 99px; overflow: hidden; color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; }
+.lang { display: inline-flex; border: 1.5px solid #fff; border-radius: 99px; overflow: hidden; color: #fff; font-size: 18px; font-weight: 600; letter-spacing: 0.06em; }
 /* siempre en pantalla, abajo a la derecha */
 .lang--fixed { position: fixed; z-index: 20; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); background: rgba(5, 5, 5, 0.6); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-.lang button { font: inherit; letter-spacing: inherit; color: inherit; background: transparent; border: 0; padding: 8px 14px; cursor: pointer; }
+.lang button { font: inherit; letter-spacing: inherit; color: inherit; background: transparent; border: 0; padding: 12px 21px; cursor: pointer; }
+/* pulso suave que invita a pulsar; se apaga en cuanto alguien lo usa */
+.lang--fixed { transition: transform 0.2s ease; animation: lang-pulse 2.6s ease-out 1.2s infinite; }
+.lang--fixed:hover { transform: scale(1.06); }
+.lang--fixed.is-used { animation: none; }
+@keyframes lang-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55); transform: scale(1); }
+  12% { transform: scale(1.06); }
+  24% { transform: scale(1); }
+  70% { box-shadow: 0 0 0 16px rgba(255, 255, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .lang--fixed { animation: none; transition: none; } }
 .lang button[aria-pressed="true"] { background: #fff; color: #050505; text-shadow: none; }
 .lang button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .hero__live { display: flex; flex-direction: column; gap: 8px; }
@@ -274,11 +286,12 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
     buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
     try { localStorage.setItem('lang', lang); } catch (e) {}
   };
-  buttons.forEach(b => b.addEventListener('click', () => apply(b.dataset.lang)));
+  buttons.forEach(b => b.addEventListener('click', () => { apply(b.dataset.lang); b.closest('.lang').classList.add('is-used'); }));
   let saved = null;
   try { saved = localStorage.getItem('lang'); } catch (e) {}
   const start = saved || ((navigator.language || 'es').toLowerCase().startsWith('es') || (navigator.language || '').toLowerCase().startsWith('ca') ? 'es' : 'en');
   if (start === 'en') apply('en');
+  if (saved) document.querySelector('.lang--fixed')?.classList.add('is-used');
 })();
 </script>
 
