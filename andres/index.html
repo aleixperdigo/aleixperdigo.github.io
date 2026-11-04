@@ -11,7 +11,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;900&family=Fraunces:ital,opsz,wght,SOFT,WONK@1,9..144,300..700,0..100,0..1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;900&family=Shrikhand&display=swap">
 <style>
 /* Layout: cabecera de 3/5 de pantalla con tres capas (cielo, nombre gigante, Andrés recortado); debajo LIVE MUSIC y los servicios como franjas-botón a todo el ancho. Un solo tema oscuro, deliberado: fondo negro y letra blanca. */
 :root {
@@ -26,7 +26,7 @@
   --c-piano: #7cc4ff;
   --c-eventos: #4fd18b;
   --font: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
-  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --display: "Shrikhand", "Cooper Black", Georgia, serif;
   --pad: clamp(16px, 3vw, 40px);
   color-scheme: dark;
 }
@@ -80,8 +80,8 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 }
 
 /* ---------- Live music ---------- */
-/* 1,5x la mitad del tamaño de los servicios; cursiva de Fraunces con ejes SOFT y WONK para el toque desenfadado */
-.live { margin: 0; letter-spacing: -0.01em; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45); font-family: var(--serif); font-style: italic; font-weight: 400; font-optical-sizing: auto; font-variation-settings: "SOFT" 100, "WONK" 1; font-size: clamp(33px, 6.75vw, 99px); line-height: 1; letter-spacing: -0.01em; text-transform: none; }
+/* Live music: Shrikhand, display gruesa y cursiva de aire setentero (referencia: Melt) */
+.live { margin: 0; font-family: var(--display); font-weight: 400; font-style: normal; font-size: clamp(36px, 6.4vw, 92px); line-height: 1; letter-spacing: 0; text-transform: none; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35); }
 
 /* ---------- Servicios: franjas-botón ---------- */
 .services { border-top: 2px solid var(--ink); }
@@ -295,7 +295,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   Promise.race([
     Promise.all([
       document.fonts.load('900 1em "Inter Tight"'), document.fonts.load('600 1em "Inter Tight"'),
-      document.fonts.load('italic 400 1em Fraunces'), pageLoaded, ...imgs
+      document.fonts.load('400 1em Shrikhand'), pageLoaded, ...imgs
     ]),
     new Promise(r => setTimeout(r, 5000))   // nunca más de 5 s en negro
   ]).then(() => {
