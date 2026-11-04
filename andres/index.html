@@ -138,9 +138,9 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 
 <span class="lang lang--fixed" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es" aria-pressed="true">ES</button><button type="button" data-lang="en" aria-pressed="false">EN</button></span>
 <header class="hero">
-  <img class="hero__layer hero__bg" src="hero.webp" alt="" width="2000" height="857">
+  <img class="hero__layer hero__bg" src="hero.webp" decoding="sync" fetchpriority="high" alt="" width="2000" height="857">
   <h1 class="hero__name"><span>Andrés </span><span>Pérez</span></h1>
-  <img class="hero__layer hero__fg" src="cutout.webp" alt="Andrés Pérez tocando la guitarra acústica" width="2000" height="857">
+  <img class="hero__layer hero__fg" src="cutout.webp" decoding="sync" fetchpriority="high" alt="Andrés Pérez tocando la guitarra acústica" width="2000" height="857">
   <nav class="hero__bar wrap" aria-label="Principal">
     <span>Live music · Barcelona</span>
     <span class="hero__links"><a href="#servicios" data-i18n="nav_services">Servicios</a><a href="#who">Who I am</a></span>
@@ -281,14 +281,16 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   const root = document.documentElement;
   const show = () => root.classList.remove('is-loading');
   const loaded = i => i.complete ? Promise.resolve() : new Promise(r => { i.addEventListener('load', r, { once: true }); i.addEventListener('error', r, { once: true }); });
-  const imgs = [...document.querySelectorAll('.hero img')].map(loaded);
+  // cargada Y decodificada, para que fondo y recorte salgan en el mismo fotograma (decode con tope: en algún navegador se cuelga)
+  const ready = i => loaded(i).then(() => Promise.race([i.decode().catch(() => {}), new Promise(r => setTimeout(r, 1500))]));
+  const imgs = [...document.querySelectorAll('.hero img')].map(ready);
   Promise.race([
     Promise.all([
       document.fonts.load('900 1em "Inter Tight"'), document.fonts.load('600 1em "Inter Tight"'),
       document.fonts.load('italic 400 1em Fraunces'), ...imgs
     ]),
     new Promise(r => setTimeout(r, 3000))   // nunca más de 3 s en negro
-  ]).then(show, show);
+  ]).then(() => requestAnimationFrame(() => requestAnimationFrame(show)), show);
 })();
 </script>
 
