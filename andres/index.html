@@ -105,7 +105,10 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .svc__more li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 .tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
 .tags span { font-size: clamp(16px, 1.6vw, 22px); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: 2px solid currentColor; padding: 6px 18px; border-radius: 99px; }
-@media (max-width: 720px) { .svc__more { grid-template-columns: minmax(0, 1fr); } }
+.svc__more--media { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr) minmax(0, 0.9fr); align-items: start; }
+.svc__img { margin: 0; }
+.svc__img img { display: block; width: 100%; height: auto; max-width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
+@media (max-width: 720px) { .svc__more, .svc__more--media { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .svc summary, .svc__plus { transition: none; } }
 
 /* ---------- Who I am: ficha, no franja ---------- */
@@ -151,7 +154,8 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
         <span><span class="svc__name">Tarantinos</span><span class="svc__line" data-i18n="t_line">Banda tributo a la música de las películas de Quentin Tarantino</span></span>
         <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
-      <div class="svc__more wrap">
+      <div class="svc__more svc__more--media wrap">
+        <figure class="svc__img"><img src="tarantinos.webp" alt="Los cuatro músicos de Tarantinos, de traje, en una azotea de Barcelona al atardecer" width="923" height="918" loading="lazy"></figure>
         <p data-i18n="t_p">Tarantino elige la música de sus películas como quien graba una cinta para un amigo: surf, soul, rock and roll y spaghetti western. Tarantinos convierte esa selección en un concierto con banda completa.</p>
         <ul data-i18n="t_ul"><li>Los temas de Pulp Fiction, Kill Bill o Reservoir Dogs</li><li>Para salas, festivales y fiestas temáticas</li></ul>
       </div>
