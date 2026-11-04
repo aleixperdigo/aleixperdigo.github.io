@@ -21,7 +21,7 @@
   --c-tarantinos: #f5c400;
   --c-rumba: #ff5a36;
   --c-piano: #7cc4ff;
-  --c-eventos: #3d86d6;
+  --c-eventos: #4fd18b;
   --font: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
   --pad: clamp(16px, 3vw, 40px);
   color-scheme: dark;
@@ -36,12 +36,16 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%;
   object-fit: cover; object-position: 46% 0%;
 }
+.hero { --shift: 14%; }
 .hero__bg { z-index: 0; }
 .hero__fg { z-index: 2; }
+/* ponytail: la foto se desplaza a la derecha para que ANDRÉS quepa entero; el hueco izquierdo se rellena con la misma foto en espejo. Si se nota la costura, outpaint del cielo en Magnific */
+.hero__bg, .hero__fg { left: var(--shift); }
+.hero__mirror { z-index: 0; left: calc(var(--shift) - 100%); transform: scaleX(-1); }
 .hero__name {
   position: absolute; z-index: 1; left: 0; right: 0; top: 13%;
-  margin: 0; text-align: center; white-space: nowrap;
-  font-weight: 900; font-size: 11.2vw; line-height: 0.8; letter-spacing: -0.065em; text-transform: uppercase;
+  margin: 0; white-space: nowrap; display: flex; justify-content: space-between; padding-inline: 1.6% 2.4%;
+  font-weight: 900; font-size: 9.6vw; line-height: 0.8; letter-spacing: -0.065em; text-transform: uppercase;
 }
 .hero__name span { display: inline; }
 .hero__bar, .hero__foot { position: absolute; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35); }
@@ -49,11 +53,14 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .hero__foot { bottom: 0; padding-bottom: 18px; align-items: flex-end; }
 .hero a { color: inherit; text-decoration: none; }
 .hero a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.hero__links { display: flex; gap: 18px; }
 .hero__foot p { margin: 0; max-width: 26ch; line-height: 1.35; }
 
 @media (max-width: 640px) {
   /* ponytail: en móvil la cara llena el ancho y no hay cielo sobre la gorra; el nombre pasa delante */
-  .hero__name { z-index: 3; font-size: 23vw; line-height: 0.8; top: auto; bottom: 74px; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35); }
+  .hero { --shift: 0%; }
+  .hero__mirror { display: none; }
+  .hero__name { display: block; text-align: center; padding-inline: 0; z-index: 3; font-size: 23vw; line-height: 0.8; top: auto; bottom: 74px; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35); }
   .hero__name span { display: block; }
 }
 
@@ -96,16 +103,29 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 @media (max-width: 720px) { .svc__more { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .svc summary, .svc__plus { transition: none; } }
 
+/* ---------- Who I am: ficha, no franja ---------- */
+.who { border-top: 2px solid var(--ink); padding-block: clamp(48px, 8vw, 110px); display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 80px); align-items: center; }
+.who__photo { margin: 0; }
+.who__photo img { display: block; width: 100%; height: auto; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 30%; border-radius: 22px; }
+.who__photo figcaption { margin-top: 10px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); }
+.who__body { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.who__tab { align-self: flex-start; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--paper); background: var(--ink); padding: 7px 14px; border-radius: 99px; }
+.who__statement { margin: 0; font-weight: 600; font-size: clamp(28px, 3.6vw, 54px); line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
+.who__statement span { color: var(--dim); }
+.who__text { margin: 0; max-width: 56ch; color: var(--dim); font-size: clamp(16px, 1.3vw, 18px); line-height: 1.6; }
+@media (max-width: 760px) { .who { grid-template-columns: minmax(0, 1fr); } }
+
 .foot { padding-block: 22px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); }
 </style>
 
 <header class="hero">
+  <img class="hero__layer hero__mirror" src="hero.webp" alt="" width="2000" height="1131">
   <img class="hero__layer hero__bg" src="hero.webp" alt="" width="2000" height="1131">
   <h1 class="hero__name"><span>Andrés </span><span>Pérez</span></h1>
   <img class="hero__layer hero__fg" src="cutout.webp" alt="Andrés Pérez tocando la guitarra acústica" width="2000" height="1131">
   <nav class="hero__bar wrap" aria-label="Principal">
     <span>Live music · Barcelona</span>
-    <a href="#servicios">Servicios</a>
+    <span class="hero__links"><a href="#servicios">Servicios</a><a href="#who">Who I am</a></span>
   </nav>
   <div class="hero__foot wrap">
     <p>Músico, compositor y productor en Barcelona.</p>
@@ -163,6 +183,17 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
         <ul><li>Jazz para ceremonias y cócteles</li><li>Pop, rock y funk para la fiesta</li><li>Repertorio a medida</li></ul>
       </div>
     </details>
+  </section>
+  <section class="who wrap" id="who" aria-labelledby="who-t">
+    <figure class="who__photo">
+      <img src="studio.webp" alt="Andrés Pérez en su estudio, delante de la mesa de mezclas" width="738" height="920" loading="lazy">
+      <figcaption>En el estudio</figcaption>
+    </figure>
+    <div class="who__body">
+      <span class="who__tab" id="who-t">Who I am</span>
+      <p class="who__statement">Músico, compositor, productor e ingeniero. <span>Más de diez años entre el estudio y el escenario.</span></p>
+      <p class="who__text">Andrés ha pasado más de una década en el estudio, grabando, produciendo y mezclando. Esa misma oreja es la que sube al escenario, ya sea con banda completa, a la guitarra rumbera o solo al piano.</p>
+    </div>
   </section>
 </main>
 
