@@ -35,17 +35,12 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .hero { position: relative; height: 60vh; min-height: 380px; overflow: hidden; background: var(--sky); color: #fff; }
 .hero__layer {
   position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%;
-  object-fit: cover; object-position: 46% 0%;
+  object-fit: cover; object-position: 47% 0%;
 }
-.hero { --shift: 14%; }
 .hero__bg { z-index: 0; }
 .hero__fg { z-index: 2; }
-/* ponytail: la foto se desplaza a la derecha para que ANDRÉS quepa entero; el hueco izquierdo se rellena con la misma foto en espejo. Si se nota la costura, outpaint del cielo en Magnific */
-.hero__bg, .hero__fg { left: var(--shift); }
-.hero__mirror { z-index: 0; left: calc(var(--shift) - 100%); }
 /* parallax: --p = px scrolled inside the hero (JS). Photo layers move together so the cutout never separates from its own background */
 .hero__bg, .hero__fg { transform: translate3d(0, calc(var(--p, 0) * 0.25px), 0); will-change: transform; }
-.hero__mirror { transform: translate3d(0, calc(var(--p, 0) * 0.25px), 0) scaleX(-1); will-change: transform; }
 .hero__name { transform: translate3d(0, calc(var(--p, 0) * 0.55px), 0); will-change: transform; }
 .hero__name {
   position: absolute; z-index: 1; left: 0; right: 0; top: 13%;
@@ -63,8 +58,6 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 
 @media (max-width: 640px) {
   /* ponytail: en móvil la cara llena el ancho y no hay cielo sobre la gorra; el nombre pasa delante */
-  .hero { --shift: 0%; }
-  .hero__mirror { display: none; }
   .hero__name { display: block; text-align: center; padding-inline: 0; z-index: 3; font-size: 23vw; line-height: 0.8; top: auto; bottom: 74px; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35); }
   .hero__name span { display: block; }
 }
@@ -125,10 +118,9 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 </style>
 
 <header class="hero">
-  <img class="hero__layer hero__mirror" src="hero.webp" alt="" width="2000" height="1131">
-  <img class="hero__layer hero__bg" src="hero.webp" alt="" width="2000" height="1131">
+  <img class="hero__layer hero__bg" src="hero.webp" alt="" width="2000" height="857">
   <h1 class="hero__name"><span>Andrés </span><span>Pérez</span></h1>
-  <img class="hero__layer hero__fg" src="cutout.webp" alt="Andrés Pérez tocando la guitarra acústica" width="2000" height="1131">
+  <img class="hero__layer hero__fg" src="cutout.webp" alt="Andrés Pérez tocando la guitarra acústica" width="2000" height="857">
   <nav class="hero__bar wrap" aria-label="Principal">
     <span>Live music · Barcelona</span>
     <span class="hero__links"><a href="#servicios">Servicios</a><a href="#who">Who I am</a></span>
