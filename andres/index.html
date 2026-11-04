@@ -60,19 +60,18 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .lang button { font: inherit; letter-spacing: inherit; color: inherit; background: transparent; border: 0; padding: 8px 14px; cursor: pointer; }
 .lang button[aria-pressed="true"] { background: #fff; color: #050505; text-shadow: none; }
 .lang button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.hero__live { display: flex; flex-direction: column; gap: 8px; }
 .hero__foot p { margin: 0; max-width: 26ch; line-height: 1.35; }
 
 @media (max-width: 640px) {
   /* ponytail: en móvil la cara llena el ancho y no hay cielo sobre la gorra; el nombre pasa delante */
-  .hero__name { display: block; text-align: center; padding-inline: 0; z-index: 3; font-size: 23vw; line-height: 0.8; top: auto; bottom: 74px; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35); }
+  .hero__name { display: block; text-align: center; padding-inline: 0; z-index: 3; font-size: 23vw; line-height: 0.8; top: auto; bottom: 112px; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35); }
   .hero__name span { display: block; }
 }
 
 /* ---------- Live music ---------- */
-.lead { padding-block: clamp(48px, 9vw, 120px) clamp(28px, 4vw, 56px); text-align: center; }
 /* 1,5x la mitad del tamaño de los servicios; cursiva de Fraunces con ejes SOFT y WONK para el toque desenfadado */
-.lead h2 { margin: 0; font-family: var(--serif); font-style: italic; font-weight: 400; font-optical-sizing: auto; font-variation-settings: "SOFT" 100, "WONK" 1; font-size: clamp(33px, 6.75vw, 99px); line-height: 1; letter-spacing: -0.01em; text-transform: none; }
-.lead p { margin: 18px auto 0; max-width: 46ch; color: var(--dim); font-size: clamp(15px, 1.4vw, 18px); }
+.live { margin: 0; letter-spacing: -0.01em; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45); font-family: var(--serif); font-style: italic; font-weight: 400; font-optical-sizing: auto; font-variation-settings: "SOFT" 100, "WONK" 1; font-size: clamp(33px, 6.75vw, 99px); line-height: 1; letter-spacing: -0.01em; text-transform: none; }
 
 /* ---------- Servicios: franjas-botón ---------- */
 .services { border-top: 2px solid var(--ink); }
@@ -107,6 +106,8 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .tags span { font-size: clamp(16px, 1.6vw, 22px); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: 2px solid currentColor; padding: 6px 18px; border-radius: 99px; }
 .svc__more--media { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr) minmax(0, 0.9fr); align-items: start; }
 .svc__img { margin: 0; }
+.svc__img--pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.svc__img.svc__img--pair img { aspect-ratio: 3 / 4; }
 .svc__img img { display: block; width: 100%; height: auto; max-width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
 @media (max-width: 720px) { .svc__more, .svc__more--media { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .svc summary, .svc__plus { transition: none; } }
@@ -137,18 +138,16 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
     <span class="hero__links"><a href="#servicios" data-i18n="nav_services">Servicios</a><a href="#who">Who I am</a></span>
   </nav>
   <div class="hero__foot wrap">
-    <p data-i18n="hero_role">Músico, compositor y productor en Barcelona.</p>
+    <div class="hero__live">
+      <h2 class="live">Live music</h2>
+      <p data-i18n="hero_role">Músico, compositor y productor en Barcelona.</p>
+    </div>
     <a href="#servicios" data-i18n="hero_cta">Ver servicios ↓</a>
   </div>
 </header>
 
 <main>
-  <section class="lead wrap" id="servicios">
-    <h2>Live music</h2>
-    <p data-i18n="lead">Cuatro formatos en directo para salas, restaurantes, bodas y eventos.</p>
-  </section>
-
-  <section class="services" aria-label="Servicios">
+  <section class="services" id="servicios" aria-label="Servicios">
     <details class="svc" style="--c: var(--c-tarantinos)">
       <summary class="wrap">
         <span><span class="svc__name">Tarantinos</span><span class="svc__line" data-i18n="t_line">Banda tributo a la música de las películas de Quentin Tarantino</span></span>
@@ -166,7 +165,8 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
         <span><span class="svc__name">Rumba</span><span class="svc__line" data-i18n="r_line">Clásicos internacionales en clave de rumba catalana</span></span>
         <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
-      <div class="svc__more wrap">
+      <div class="svc__more svc__more--media wrap">
+        <figure class="svc__img svc__img--pair"><img src="rumba-1.webp" alt="Andrés cantando rumba con la guitarra en un bar de Barcelona" width="946" height="1504" loading="lazy"><img src="rumba-2.webp" alt="Andrés sonriendo con un compañero de rumba" width="946" height="932" loading="lazy"></figure>
         <p data-i18n="r_p">Canciones que todo el mundo conoce, pasadas por el ventilador de la guitarra rumbera. Del pop al soul, con palmas y ganas de bailar desde el primer tema.</p>
         <ul data-i18n="r_ul"><li>Rumba en directo en Alegría</li><li>Para fiestas, terrazas y celebraciones</li></ul>
       </div>
