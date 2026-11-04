@@ -91,8 +91,8 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .svc__more ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .svc__more li { font-weight: 600; font-size: 15px; padding-left: 18px; position: relative; }
 .svc__more li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.tags span { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: 1.5px solid currentColor; padding: 3px 9px; border-radius: 99px; }
+.tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.tags span { font-size: clamp(16px, 1.6vw, 22px); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: 2px solid currentColor; padding: 6px 18px; border-radius: 99px; }
 @media (max-width: 720px) { .svc__more { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .svc summary, .svc__plus { transition: none; } }
 
@@ -155,12 +155,12 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 
     <details class="svc" style="--c: var(--c-eventos)">
       <summary class="wrap">
-        <span><span class="svc__name">Tu evento</span><span class="svc__line">El estilo que quieras para tu evento</span><span class="tags"><span>Jazz</span><span>Rock</span><span>Funk</span></span></span>
+        <span><span class="svc__name">Tu evento</span><span class="svc__line">El estilo que quieras para tu evento</span><span class="tags"><span>Jazz</span><span>Pop</span><span>Rock</span><span>Funk</span></span></span>
         <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
       <div class="svc__more wrap">
-        <p>Bodas, fiestas privadas y eventos de empresa. Jazz para la ceremonia o el cóctel, rock o funk para cuando toca bailar. El repertorio se adapta a cada evento.</p>
-        <ul><li>Jazz para ceremonias y cócteles</li><li>Rock y funk para la fiesta</li><li>Repertorio a medida</li></ul>
+        <p>Bodas, fiestas privadas y eventos de empresa. Jazz para la ceremonia o el cóctel, pop, rock o funk para cuando toca bailar. El repertorio se adapta a cada evento.</p>
+        <ul><li>Jazz para ceremonias y cócteles</li><li>Pop, rock y funk para la fiesta</li><li>Repertorio a medida</li></ul>
       </div>
     </details>
   </section>
