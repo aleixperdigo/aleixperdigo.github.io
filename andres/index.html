@@ -111,6 +111,10 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .who__tab { align-self: flex-start; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--paper); background: var(--ink); padding: 7px 14px; border-radius: 99px; }
 .who__statement { margin: 0; font-weight: 600; font-size: clamp(28px, 3.6vw, 54px); line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
 .who__statement span { color: var(--dim); }
+.who__lang { display: flex; flex-direction: column; gap: 16px; }
+.who__lang--en { padding-top: 22px; border-top: 1px solid var(--line); }
+.who__lang--en .who__statement { font-size: clamp(20px, 2.2vw, 32px); }
+.who__langtag { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
 .who__text { margin: 0; max-width: 56ch; color: var(--dim); font-size: clamp(16px, 1.3vw, 18px); line-height: 1.6; }
 @media (max-width: 760px) { .who { grid-template-columns: minmax(0, 1fr); } }
 
@@ -189,8 +193,15 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
     </figure>
     <div class="who__body">
       <span class="who__tab" id="who-t">Who I am</span>
-      <p class="who__statement">Músico, compositor, productor e ingeniero. <span>Más de diez años entre el estudio y el escenario.</span></p>
-      <p class="who__text">Andrés ha pasado más de una década en el estudio, grabando, produciendo y mezclando. Esa misma oreja es la que sube al escenario, ya sea con banda completa, a la guitarra rumbera o solo al piano.</p>
+      <div class="who__lang" lang="es">
+        <p class="who__statement">Performer y entertainer. <span>Músico, compositor y productor, con más de diez años entre el estudio y el escenario.</span></p>
+        <p class="who__text">En directo, Andrés lee la sala: cambia el repertorio sobre la marcha, conecta con el público y convierte un concierto, una cena o una boda en una fiesta. Detrás hay más de una década en el estudio grabando, produciendo y mezclando, y esa oreja se nota en cada tema que toca.</p>
+      </div>
+      <div class="who__lang who__lang--en" lang="en">
+        <span class="who__langtag">English</span>
+        <p class="who__statement">Performer and entertainer. <span>Musician, songwriter and producer, with more than ten years between the studio and the stage.</span></p>
+        <p class="who__text">Live, Andrés reads the room: he shapes the setlist on the fly, connects with the crowd and turns a gig, a dinner or a wedding into a party. Behind it is more than a decade in the studio recording, producing and mixing, and you can hear that ear in every song he plays.</p>
+      </div>
     </div>
   </section>
 </main>
