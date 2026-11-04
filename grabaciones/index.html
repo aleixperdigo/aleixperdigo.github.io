@@ -228,9 +228,9 @@ body {
 <section class="todo band" aria-labelledby="todo-t">
   <h2 class="sec-title" id="todo-t">Falta por cerrar</h2>
   <ul>
-    <li><span class="box"></span>Día del bolo con Alegría</li>
-    <li><span class="box"></span>Confirmar la cena de H&amp;M y su día</li>
-    <li><span class="box"></span>Día de Piano Man: antes del 13 o después del 20</li>
+    <li><span class="box"></span>Hora del viernes 6 en L'Esfèric</li>
+    <li><span class="box"></span>Confirmar Alegría el domingo 8</li>
+    <li><span class="box"></span>Piano Man en Bellas: 26 o 28 de noviembre</li>
     <li><span class="box"></span>Día exacto del ensayo y el sketch: 3, 4 o 5 de diciembre</li>
   </ul>
 </section>
@@ -254,12 +254,12 @@ const CAT = {
 const EV = [
   { id: 'boda', cat: 'bodas', short: 'Boda', title: "Boda en L'Esfèric", days: ['2026-11-06'], status: ['Fijo', 'fijo'],
     shots: ['La boda tocando jazz en directo', 'Fotos con los músicos'], where: "L'Esfèric", web: 'Bodas · jazz, rock, funk' },
-  { id: 'alegria', cat: 'rumba', short: 'Alegría', title: 'Bolo con Alegría', days: [], before: '2026-11-13', status: ['Día por fijar', 'dash'],
+  { id: 'alegria', cat: 'rumba', short: 'Alegría', title: 'Bolo con Alegría', days: ['2026-11-08'], status: ['Por confirmar', 'dash'],
     shots: ['Bolo de rumba en directo', 'Fotos con la banda'], web: 'Rumba' },
-  { id: 'hm', cat: 'hm', short: 'H&M', title: 'Cena de H&M en el Soho', days: [], before: '2026-11-13', status: ['Por confirmar', 'dash'],
-    shots: ['Solo si se confirma el bolo', 'Directo en la cena'], web: 'Por decidir' },
-  { id: 'piano', cat: 'piano', short: 'Piano Man', title: 'Piano Man', days: [], either: true, status: ['Día por confirmar', 'dash'],
-    shots: ['Solo en el estudio tocando el piano', 'Fotos en el estudio'], web: 'Piano Man · solo en el estudio' },
+  { id: 'hm', cat: 'hm', short: 'H&M', title: 'Cena de H&M en el Soho', days: [], before: '2026-11-13', status: ['No grabamos', 'dash'],
+    shots: ['Sonia dice que no podemos ir a grabar', 'Habrá vídeo corporativo: sacamos imágenes de ahí'], web: 'Por decidir' },
+  { id: 'piano', cat: 'piano', short: 'Piano Man', title: 'Piano Man en Bellas', days: ['2026-11-26', '2026-11-28'], maybe: true, status: ['Día por confirmar', 'dash'],
+    shots: ['Piano Man en directo', 'Fotos'], where: 'Bellas', web: 'Piano Man' },
   { id: 'paron', cat: 'paron', short: 'Parón', title: 'Parón', range: ['2026-11-13', '2026-11-20'], status: ['Baja', 'off'],
     shots: ['No se graba nada', 'El final puede alargarse unos días'], web: '—' },
   { id: 'ensayo', cat: 'tarantinos', short: 'Ensayo', title: 'Ensayo y sketch de Tarantinos', days: ['2026-12-03', '2026-12-04', '2026-12-05'], maybe: true,
