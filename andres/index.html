@@ -5,6 +5,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Andrés Pérez</title>
+<script>document.documentElement.classList.add('is-loading');</script>
+<link rel="preload" as="image" href="hero.webp" fetchpriority="high">
+<link rel="preload" as="image" href="cutout.webp" fetchpriority="high">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,6 +31,11 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+html { background: #050505; }
+/* aparece todo de golpe: oculto hasta tener fuentes y las dos capas de la cabecera */
+html.is-loading body { opacity: 0; }
+body { transition: opacity 0.45s ease; }
+@media (prefers-reduced-motion: reduce) { body { transition: none; } }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 .wrap { padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }
 
@@ -148,25 +156,13 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 
 <main>
   <section class="services" id="servicios" aria-label="Servicios">
-    <details class="svc" style="--c: var(--c-tarantinos)">
-      <summary class="wrap">
-        <span><span class="svc__name">Tarantinos</span><span class="svc__line" data-i18n="t_line">Banda tributo a la música de las películas de Quentin Tarantino</span></span>
-        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
-      </summary>
-      <div class="svc__more svc__more--media wrap">
-        <figure class="svc__img"><img src="tarantinos.webp" alt="Los cuatro músicos de Tarantinos, de traje, en una azotea de Barcelona al atardecer" width="923" height="918" loading="lazy"></figure>
-        <p data-i18n="t_p">Tarantino elige la música de sus películas como quien graba una cinta para un amigo: surf, soul, rock and roll y spaghetti western. Tarantinos convierte esa selección en un concierto con banda completa.</p>
-        <ul data-i18n="t_ul"><li>Los temas de Pulp Fiction, Kill Bill o Reservoir Dogs</li><li>Para salas, festivales y fiestas temáticas</li></ul>
-      </div>
-    </details>
-
     <details class="svc" style="--c: var(--c-rumba)">
       <summary class="wrap">
         <span><span class="svc__name">Rumba</span><span class="svc__line" data-i18n="r_line">Clásicos internacionales en clave de rumba catalana</span></span>
         <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
       </summary>
       <div class="svc__more svc__more--media wrap">
-        <figure class="svc__img svc__img--pair"><img src="rumba-1.webp" alt="Andrés cantando rumba con la guitarra en un bar de Barcelona" width="946" height="1504" loading="lazy"><img src="rumba-2.webp" alt="Andrés sonriendo con un compañero de rumba" width="946" height="932" loading="lazy"></figure>
+        <figure class="svc__img svc__img--pair"><img src="rumba-1.webp" alt="Andrés cantando rumba con la guitarra en un bar de Barcelona" width="946" height="1504" decoding="async" fetchpriority="low"><img src="rumba-2.webp" alt="Andrés sonriendo con un compañero de rumba" width="946" height="932" decoding="async" fetchpriority="low"></figure>
         <p data-i18n="r_p">Canciones que todo el mundo conoce, pasadas por el ventilador de la guitarra rumbera. Del pop al soul, con palmas y ganas de bailar desde el primer tema.</p>
         <ul data-i18n="r_ul"><li>Rumba en directo en Alegría</li><li>Para fiestas, terrazas y celebraciones</li></ul>
       </div>
@@ -183,6 +179,18 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
       </div>
     </details>
 
+    <details class="svc" style="--c: var(--c-tarantinos)">
+      <summary class="wrap">
+        <span><span class="svc__name">Tarantinos</span><span class="svc__line" data-i18n="t_line">Banda tributo a la música de las películas de Quentin Tarantino</span></span>
+        <span class="svc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="42%" height="42%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></span>
+      </summary>
+      <div class="svc__more svc__more--media wrap">
+        <figure class="svc__img"><img src="tarantinos.webp" alt="Los cuatro músicos de Tarantinos, de traje, en una azotea de Barcelona al atardecer" width="923" height="918" decoding="async" fetchpriority="low"></figure>
+        <p data-i18n="t_p">Tarantino elige la música de sus películas como quien graba una cinta para un amigo: surf, soul, rock and roll y spaghetti western. Tarantinos convierte esa selección en un concierto con banda completa.</p>
+        <ul data-i18n="t_ul"><li>Los temas de Pulp Fiction, Kill Bill o Reservoir Dogs</li><li>Para salas, festivales y fiestas temáticas</li></ul>
+      </div>
+    </details>
+
     <details class="svc" style="--c: var(--c-eventos)">
       <summary class="wrap">
         <span><span class="svc__name" data-i18n="e_name">Tu evento</span><span class="svc__line" data-i18n="e_line">El estilo que quieras para tu evento</span><span class="tags"><span>Jazz</span><span>Pop</span><span>Rock</span><span>Funk</span></span></span>
@@ -196,7 +204,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   </section>
   <section class="who wrap" id="who" aria-labelledby="who-t">
     <figure class="who__photo">
-      <img src="studio.webp" alt="Andrés Pérez en su estudio, delante de la mesa de mezclas" width="738" height="920" loading="lazy">
+      <img src="studio.webp" alt="Andrés Pérez en su estudio, delante de la mesa de mezclas" width="738" height="920" decoding="async" fetchpriority="low">
       <figcaption data-i18n="who_cap">En el estudio</figcaption>
     </figure>
     <div class="who__body">
@@ -265,6 +273,22 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
   try { saved = localStorage.getItem('lang'); } catch (e) {}
   const start = saved || ((navigator.language || 'es').toLowerCase().startsWith('es') || (navigator.language || '').toLowerCase().startsWith('ca') ? 'es' : 'en');
   if (start === 'en') apply('en');
+})();
+</script>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const show = () => root.classList.remove('is-loading');
+  const loaded = i => i.complete ? Promise.resolve() : new Promise(r => { i.addEventListener('load', r, { once: true }); i.addEventListener('error', r, { once: true }); });
+  const imgs = [...document.querySelectorAll('.hero img')].map(loaded);
+  Promise.race([
+    Promise.all([
+      document.fonts.load('900 1em "Inter Tight"'), document.fonts.load('600 1em "Inter Tight"'),
+      document.fonts.load('italic 400 1em Fraunces'), ...imgs
+    ]),
+    new Promise(r => setTimeout(r, 3000))   // nunca más de 3 s en negro
+  ]).then(show, show);
 })();
 </script>
 
