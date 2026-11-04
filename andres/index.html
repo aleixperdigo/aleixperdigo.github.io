@@ -8,7 +8,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;900&family=Instrument+Serif&display=swap">
 <style>
 /* Layout: cabecera de 3/5 de pantalla con tres capas (cielo, nombre gigante, Andrés recortado); debajo LIVE MUSIC y los servicios como franjas-botón a todo el ancho. Un solo tema oscuro, deliberado: fondo negro y letra blanca. */
 :root {
@@ -23,6 +23,7 @@
   --c-piano: #7cc4ff;
   --c-eventos: #4fd18b;
   --font: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --serif: "Instrument Serif", "Times New Roman", Georgia, serif;
   --pad: clamp(16px, 3vw, 40px);
   color-scheme: dark;
 }
@@ -66,7 +67,8 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 
 /* ---------- Live music ---------- */
 .lead { padding-block: clamp(48px, 9vw, 120px) clamp(28px, 4vw, 56px); text-align: center; }
-.lead h2 { margin: 0; font-weight: 900; font-size: clamp(64px, 15vw, 220px); line-height: 0.8; letter-spacing: -0.06em; text-transform: uppercase; }
+/* mitad del tamaño de los nombres de servicio (clamp 44px, 9vw, 132px) */
+.lead h2 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(22px, 4.5vw, 66px); line-height: 1; letter-spacing: 0; text-transform: uppercase; }
 .lead p { margin: 18px auto 0; max-width: 46ch; color: var(--dim); font-size: clamp(15px, 1.4vw, 18px); }
 
 /* ---------- Servicios: franjas-botón ---------- */
